@@ -3,12 +3,15 @@
 
 import HelloWorld from "@/components/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
-
+import ResourceRegisterForm from "@/components/form/ResourceRegisterForm.vue";
+import ResourceTable from "@/components/table/ResourceTable.vue";
 export default {
   name: 'ResourceRegisterView',
   components: {
     HelloWorld,
     NavigatorComponent,
+    ResourceRegisterForm,
+    ResourceTable,
   }
 }
 </script>
@@ -24,6 +27,8 @@ export default {
           <HelloWorld msg="资源注册页" />
         </el-header>
         <el-main>
+          <resource-register-form></resource-register-form>
+          <resource-table></resource-table>
         </el-main>
       </el-container>
     </el-container>

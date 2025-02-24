@@ -13,9 +13,9 @@ const routes = [
   {path:'/',redirect:'/login'},
   {path: '/home', component: HomeView},
   {path: '/login', component: LoginView},
-  {path: '/resource/register', component: ResourceRegisterView},
-  {path: '/resource/manage', component: ResourceManageView},
-  {path: '/resource/auto', component: resourceAutoView},
+  {path: '/form/register', component: ResourceRegisterView},
+  {path: '/form/manage', component: ResourceManageView},
+  {path: '/form/auto', component: resourceAutoView},
   {path: '/monitor/details', component: monitorDetailsView},
   {path: '/monitor/manage', component: monitorManageView},
 
