@@ -6,14 +6,13 @@
         </el-aside>
       <el-container style="border: 1px solid #eee">
         <el-header>
-          <HelloWorld msg="Welcome to Your Vue.js App" />
+          <HelloWorld msg="系统主页" />
         </el-header>
         <el-main>
           <HelloWorld msg="高院长" />
           <DashBoardComponent></DashBoardComponent>
         </el-main>
       </el-container>
-
     </el-container>
 
 </template>

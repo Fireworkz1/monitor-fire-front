@@ -6,6 +6,14 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    goToPage(path) {
+      this.$router.push(path).catch(err => {
+        if (err.name !== "NavigationDuplicated") {
+          // 如果不是重复导航错误，抛出其他错误
+          throw err;
+        }
+      });// 动态跳转到指定路径
     }
   }
 }
@@ -13,7 +21,7 @@ export default {
 <template>
 
   <div>
-    <h5>回到主页</h5>
+    <h5 @click="goToPage('/home')">回到主页</h5>
     <el-menu
         default-active="2"
         class="el-menu-vertical-demo"
@@ -28,9 +36,9 @@ export default {
           <span>资源管理</span>
         </template>
 <!--        <el-menu-item index="1-1">资源总览</el-menu-item>-->
-        <el-menu-item index="1-1">资源注册</el-menu-item>
-        <el-menu-item index="1-2">资源控制</el-menu-item>
-        <el-menu-item index="1-3">自动化配置</el-menu-item>
+        <el-menu-item index="1-1" @click="goToPage('/resource/register')">资源注册</el-menu-item>
+        <el-menu-item index="1-2" @click="goToPage('/resource/manage')">资源控制</el-menu-item>
+        <el-menu-item index="1-3" @click="goToPage('/resource/auto')" disabled>自动化配置</el-menu-item>
 
       </el-submenu>
       <el-submenu index="2">
@@ -38,8 +46,8 @@ export default {
           <i class="el-icon-location"></i>
           <span>资源监控</span>
         </template>
-        <el-menu-item index="2-1">监控配置</el-menu-item>
-        <el-menu-item index="2-2">监控详情</el-menu-item>
+        <el-menu-item index="2-1" @click="goToPage('/monitor/details')">监控配置</el-menu-item>
+        <el-menu-item index="2-2" @click="goToPage('/monitor/manage')">监控详情</el-menu-item>
       </el-submenu>
       <el-submenu index="3" disabled>
         <i class="el-icon-document"></i>
