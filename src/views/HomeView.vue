@@ -1,12 +1,19 @@
 <template>
 
-    <el-container style="height: 100vh; border: 1px solid #eee">
-        <el-aside width="250px" >
+    <el-container style="height: 100vh">
+        <el-aside width="250px" style="border: 1px solid #eee">
           <navigator-component></navigator-component>
         </el-aside>
-      <el-main>
-        <HelloWorld msg="Welcome to Your Vue.js App" />
-      </el-main>
+      <el-container style="border: 1px solid #eee">
+        <el-header>
+          <HelloWorld msg="Welcome to Your Vue.js App" />
+        </el-header>
+        <el-main>
+          <HelloWorld msg="高院长" />
+          <DashBoardComponent></DashBoardComponent>
+        </el-main>
+      </el-container>
+
     </el-container>
 
 </template>
@@ -15,11 +22,13 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
+import DashBoardComponent from "@/components/DashBoardComponent.vue";
 export default {
   name: 'HomeView',
   components: {
     HelloWorld,
-    NavigatorComponent
+    NavigatorComponent,
+    DashBoardComponent,
   }
 }
 </script>

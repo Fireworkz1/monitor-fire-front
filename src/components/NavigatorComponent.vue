@@ -13,7 +13,7 @@ export default {
 <template>
 
   <div>
-    <h5>导航栏</h5>
+    <h5>回到主页</h5>
     <el-menu
         default-active="2"
         class="el-menu-vertical-demo"
@@ -25,10 +25,11 @@ export default {
       <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>资源总览</span>
+          <span>资源管理</span>
         </template>
+<!--        <el-menu-item index="1-1">资源总览</el-menu-item>-->
         <el-menu-item index="1-1">资源注册</el-menu-item>
-        <el-menu-item index="1-2">资源管理</el-menu-item>
+        <el-menu-item index="1-2">资源控制</el-menu-item>
         <el-menu-item index="1-3">自动化配置</el-menu-item>
 
       </el-submenu>
