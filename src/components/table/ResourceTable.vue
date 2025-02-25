@@ -8,9 +8,10 @@ export default {
       this.local.resourceType='';
       this.showDetail=false;
     },
-    handleDelete() {
-      console.log(this.local.index);
-      this.local.index=null;
+    handleDelete(row) {
+      this.tableData.splice(row.id-1, 1);
+      this.dialogVisible = false;
+      this.local.row=null;
     },
     filterHandler(value, row, column){
       const property = column['property'];
@@ -29,10 +30,11 @@ export default {
   data(){
     return{
       local:{
-        index:0,
+        index:null,
         searchstr:'',
         resourceType:'',
         showId:null,
+        row:null,
       },
       showDetail:false,
       dialogVisible:false,
@@ -131,7 +133,7 @@ export default {
           label="启动模式"
           width="120">
       </el-table-column>
-      <el-table-column v-if="editAllow" label="监控是否启动" width="120">
+      <el-table-column v-if="editAllow" label="监控是否启动" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>监控是否启动: {{ scope.row.resourceMonitorOn }}</p>
@@ -150,7 +152,7 @@ export default {
           <el-button
               size="mini"
               type="danger"
-              @click="dialogVisible=true;local.index=scope.$index">删除</el-button>
+              @click="dialogVisible=true;local.row=scope.row">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -163,7 +165,7 @@ export default {
       <span>确定要删除该监控对象吗？</span>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="handleDelete(local.index)">确 定</el-button>
+    <el-button type="primary" @click="handleDelete(local.row)">确 定</el-button>
   </span>
     </el-dialog>
 

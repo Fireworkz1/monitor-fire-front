@@ -1,12 +1,16 @@
 <script>
 import HelloWorld from "@/components/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
+import MonitorRegisterForm from "@/components/form/MonitorRegisterForm.vue";
+import MonitorTable from "@/components/table/MonitorTable.vue";
 
 export default {
   name: 'MonitorManageView',
   components: {
+    MonitorRegisterForm,
     HelloWorld,
     NavigatorComponent,
+    MonitorTable,
   }
 }
 </script>
@@ -22,6 +26,8 @@ export default {
           <HelloWorld msg="监控管理页" />
         </el-header>
         <el-main>
+          <monitor-register-form></monitor-register-form>
+          <monitor-table></monitor-table>
         </el-main>
       </el-container>
     </el-container>
