@@ -7,6 +7,11 @@ import ResourceManageView from "@/views/ResourceManageView.vue";
 import resourceAutoView from "@/views/ResourceAutoView.vue";
 import monitorDetailsView from "@/views/MonitorDetailsView.vue";
 import monitorManageView from "@/views/MonitorManageView.vue";
+import PermissionUserView from "@/views/PermissionUserView.vue";
+import PermissionGroupView from "@/views/PermissionGroupView.vue";
+import PermissionLevelView from "@/views/PermissionLevelView.vue";
+import WarnSearchView from "@/views/WarnSearchView.vue";
+import WarnManageView from "@/views/WarnManageView.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -18,6 +23,11 @@ const routes = [
   {path: '/form/auto', component: resourceAutoView},
   {path: '/monitor/details', component: monitorDetailsView},
   {path: '/monitor/manage', component: monitorManageView},
+  {path: '/permission/user', component: PermissionUserView},
+  {path: '/permission/group', component: PermissionGroupView},
+  {path: '/permission/level', component: PermissionLevelView},
+  {path: '/warn/manage', component: WarnManageView},
+  {path: '/warn/search', component: WarnSearchView},
 
 
   {path: '/about', component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')}

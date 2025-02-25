@@ -14,6 +14,12 @@ export default {
           throw err;
         }
       });// 动态跳转到指定路径
+    },
+    logoff(){
+      localStorage.removeItem("token");
+
+      // 跳转到登录页面
+      this.$router.push("/login");
     }
   }
 }
@@ -58,8 +64,8 @@ export default {
           <i class="el-icon-location"></i>
           <span>监控报警</span>
         </template>
-        <el-menu-item index="4-1">报警配置</el-menu-item>
-        <el-menu-item index="4-2">报警查询</el-menu-item>
+        <el-menu-item index="4-1" @click="goToPage('/warn/manage')">报警配置</el-menu-item>
+        <el-menu-item index="4-2" @click="goToPage('/warn/search')">报警查询</el-menu-item>
       </el-submenu>
       <el-submenu index="5">
         <template>
@@ -67,11 +73,11 @@ export default {
         </template>
         <el-submenu index="5-1">
           <template slot="title">权限管理</template>
-          <el-menu-item index="5-1-1">用户分组</el-menu-item>
-          <el-menu-item index="5-1-2">权限分级</el-menu-item>
+          <el-menu-item index="5-1-1" @click="goToPage('/permission/group')">用户分组</el-menu-item>
+          <el-menu-item index="5-1-2" @click="goToPage('/permission/level')" disabled>权限分级</el-menu-item>
         </el-submenu>
-        <el-menu-item index="5-2">登录信息管理</el-menu-item>
-        <el-menu-item index="5-3">注销</el-menu-item>
+        <el-menu-item index="5-2" @click="goToPage('/permission/user')">登录信息管理</el-menu-item>
+        <el-menu-item index="5-3" @click="logoff">注销</el-menu-item>
 
       </el-submenu>
     </el-menu>
