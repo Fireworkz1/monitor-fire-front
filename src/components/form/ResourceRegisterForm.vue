@@ -1,14 +1,26 @@
 <script>
 export default {
   methods:{
-  onSubmit(){
+    onSubmit(){
+      if(this.accessible){
+        this.dialogVisible = false;
+        this.accessible=false;
+        alert('已经启用默认监控，可在资源控制页查看详情');
+      }else{
+        alert('请先Ping通目标资源再添加');
+      }
 
-  }
+    },
+    testAccessible(){
+      alert('Pong');
+      this.accessible = true;
+    },
   },
   data() {
     return {
       dialogVisible:false,
       selectedType: '', // 选择器的绑定值
+      accessible:false,
       serverForm: { // 服务器表单数据
         resourceType: 'server',
         resourceName: '',
@@ -101,8 +113,9 @@ export default {
       </div>
 
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="testAccessible">Ping</el-button>
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="onSubmit">确 定</el-button>
   </span>
     </el-dialog>
     <!-- 选择器 -->

@@ -1,12 +1,14 @@
 <script>
 import HelloWorld from "@/components/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
+import ResourceTable from "@/components/table/ResourceTable.vue";
 
 export default {
   name: 'ResourceManageView',
   components: {
     HelloWorld,
     NavigatorComponent,
+    ResourceTable,
   }
 }
 </script>
@@ -22,6 +24,7 @@ export default {
           <HelloWorld msg="资源管理页" />
         </el-header>
         <el-main>
+          <resource-table edit-allow=true></resource-table>
         </el-main>
       </el-container>
     </el-container>

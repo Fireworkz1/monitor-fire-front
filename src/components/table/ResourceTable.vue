@@ -1,12 +1,16 @@
 <script>
+import ResourceDetailComponent from "@/components/ResourceDetailComponent.vue";
+
 export default {
   methods: {
-    handleDetails(index) {
-      console.log(this.tableData[index].resourceName);
+    closeDetails() {
+      this.local.showId=null;
+      this.local.resourceType='';
+      this.showDetail=false;
     },
     handleDelete() {
       console.log(this.local.index);
-      this.local.index=0
+      this.local.index=null;
     },
     filterHandler(value, row, column){
       const property = column['property'];
@@ -14,6 +18,11 @@ export default {
       return row[property] === value;
     },search(){
       this.local.searchstr=''
+    },
+    seeDetails(row){
+      this.local.showId=row.id;
+      this.local.resourceType=row.resourceType;
+      this.showDetail=true;
     }
   },
   props:["editAllow"],
@@ -22,7 +31,10 @@ export default {
       local:{
         index:0,
         searchstr:'',
+        resourceType:'',
+        showId:null,
       },
+      showDetail:false,
       dialogVisible:false,
       tableData:[{
         id:1,
@@ -31,7 +43,7 @@ export default {
         resourceIp:'180.180.180.180',
         resourcePort:'9900',
         resourceTypeSecond:'nacos',
-        addedTime:'',
+        addedTime:'2',
         resourceMonitorOn:'1',
         resourceDescription:'阿达伟大伟大达瓦',
         resourceUp:'1',
@@ -43,13 +55,16 @@ export default {
         resourceIp:'180.180.180.180',
         resourcePort:'9900',
         resourceTypeSecond:'nacos',
-        addedTime:'',
+        addedTime:'1',
         resourceMonitorOn:'1',
         resourceDescription:'阿达伟大伟大达瓦',
         resourceUp:'1',
         startMode:'docker',
       }]
     }
+  },
+  components:{
+    ResourceDetailComponent
   }
 };
 </script>
@@ -67,7 +82,7 @@ export default {
     <div style="margin-top: 50px"></div>
     <el-table
         border
-        :default-sort="{ prop: 'addedTime', order: 'descending' }"
+        :default-sort="{ prop: 'addedTime', order: editAllow? 'ascending':'descending' }"
         :data="tableData"
         style="width: 100%"
         height="400">
@@ -131,7 +146,7 @@ export default {
         <template slot-scope="scope">
           <el-button
               size="mini"
-              @click="handleDetails(scope.$index, scope.row)">查看详情</el-button>
+              @click="seeDetails(scope.row)">查看详情</el-button>
           <el-button
               size="mini"
               type="danger"
@@ -149,6 +164,17 @@ export default {
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="handleDelete(local.index)">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog
+        :title="local.resourceType === 'server' ? '服务器资源详情' : '软件资源详情'"
+        :visible.sync="showDetail"
+        width="80%"
+    >
+      <resource-detail-component v-if="showDetail" :idd="local.showId" :type="local.resourceType"></resource-detail-component>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="closeDetails">确 定</el-button>
   </span>
     </el-dialog>
   </div>
