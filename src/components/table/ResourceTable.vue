@@ -1,5 +1,5 @@
 <script>
-import ResourceDetailComponent from "@/components/ResourceDetailComponent.vue";
+import ResourceDetailComponent from "@/components/discription/ResourceDetailDescription.vue";
 
 export default {
   methods: {
@@ -131,7 +131,7 @@ export default {
       <el-table-column
           prop="startMode"
           label="启动模式"
-          width="120">
+          >
       </el-table-column>
       <el-table-column v-if="editAllow" label="监控是否启动" width="80">
         <template slot-scope="scope">
@@ -152,7 +152,7 @@ export default {
           <el-button
               size="mini"
               type="danger"
-              @click="dialogVisible=true;local.row=scope.row">删除</el-button>
+              @click="dialogVisible=true;this.local.row=scope.row">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

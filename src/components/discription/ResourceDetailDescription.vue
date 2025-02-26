@@ -8,38 +8,7 @@ export default {
     return{
       res:{},
       resourceId:null,
-      softwareDetailRes:{
-        prometheusUp: 1, // 默认值为 null，表示未定义
-        prometheusJobname: "",
-        prometheusInstance: "",
-        resouceId: null,
-        resouceName: "",
-        resouceIp: "",
-        resourceType: "",
-        startMode: "",
-        resourcePort: "",
-        resourceDescription: "",
-        exporterType: ""
-      },
-      hardwareDetailRes:{
-        prometheusUp: 0,
-        prometheusJobname: "",
-        prometheusInstance: "",
-        prometheusCpuNums: "",
-        prometheusTotalMemoryGBs: 0.0,
-        prometheusAvailableFileGBs: 0.0,
-        prometheusServerloadtime: "",
-        resouceId: null,
-        resouceName: "",
-        resouceIp: "",
-        resourceType: "",
-        resourceDescription: "",
-        exporterType: "",
-        machine: "",
-        sysname: "",
-        version: "",
-        nodename: ""
-      }
+
     }
   }
   ,methods:{
@@ -52,7 +21,7 @@ export default {
   },components:{
 
 
-  },created() {
+  },mounted() {
     this.resourceId=this.idd;
     // console.log(this.idd);
     console.log(this.type);

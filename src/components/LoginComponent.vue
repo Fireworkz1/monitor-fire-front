@@ -1,32 +1,30 @@
 <template>
   <div class="login-container">
     <h2>登录微服务管理系统</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="account">账号:</label>
-        <input
-            type="text"
-            id="account"
+    <el-form ref="loginForm" :model="loginForm" :rules="rules" label-position="top" @submit.prevent="handleLogin">
+      <el-form-item label="账号" prop="account">
+        <el-input
             v-model="account"
+            placeholder="请输入账号"
+            prefix-icon="el-icon-user"
             required
-            class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">密码:</label>
-        <input
-            type="password"
-            id="password"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input
             v-model="password"
+            type="password"
+            placeholder="请输入密码"
+            prefix-icon="el-icon-lock"
             required
-            class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn">登录</button>
-      </div>
+            show-password
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" native-type="submit">登录</el-button>
+      </el-form-item>
       <p v-if="error" class="error">{{ error }}</p>
-    </form>
+    </el-form>
   </div>
 </template>
 
