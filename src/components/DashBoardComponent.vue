@@ -1,21 +1,41 @@
 <script>
 
 
+import axios from "@/axios";
+
 export default {
   name: 'DashboardComponent',
-  methods: {},
+  methods: {
+    async getdata() {
+      try {
+        // 模拟登录请求
+        const response = await axios.get('/dashboard/basicInfo');
+        console.log(response)
+        this.serverNum=response.data.serverNum;
+        this.microserviceNum=response.data.softwareNum;
+        this.userNum=response.data.userNum;
+        this.warningNum=response.data.warnNum;
+      } catch (error) {
+        // 登录失败，显示错误信息
+        this.$message(error.message);
+        this.$router.push('/login');
+      }
+    }
+  },
   props: {
     msg: String
   }, data() {
     return {
-      serverNum: 0,
-      microserviceNum: 0,
-      registerNum:0,
-      warningNum:0,
+      serverNum: null,
+      microserviceNum: null,
+      userNum:null,
+      warningNum:null,
 
       error: ''
     };
-  },
+  },mounted() {
+    this.getdata();
+  }
 }
 </script>
 
@@ -23,7 +43,7 @@ export default {
   <el-row :gutter="35" style="margin-top: 60px">
     <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控服务器数：<br><br>     {{serverNum}}</h4></div></el-col>
     <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控微服务数：<br><br>     {{microserviceNum}}</h4></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>系统注册人数：<br><br>     {{registerNum}}</h4></div></el-col>
+    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>系统注册人数：<br><br>     {{userNum}}</h4></div></el-col>
     <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>告警规则条数：<br><br>     {{warningNum}}</h4></div></el-col>
   </el-row>
 </template>

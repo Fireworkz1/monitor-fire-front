@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <h2>登录微服务管理系统</h2>
-    <el-form ref="loginForm" :model="loginForm" :rules="rules" label-position="top" @submit.prevent="handleLogin">
+    <el-form ref="loginForm" label-position="top" >
       <el-form-item label="账号" prop="account">
         <el-input
             v-model="account"
@@ -21,9 +21,9 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" native-type="submit">登录</el-button>
+        <el-button type="primary" native-type="submit" @click="handleLogin">登录</el-button>
       </el-form-item>
-      <p v-if="error" class="error">{{ error }}</p>
+<!--      <p v-if="error" class="error">{{ error }}</p>-->
     </el-form>
   </div>
 </template>
@@ -47,15 +47,17 @@ export default {
           account: this.account,
           password: this.password
         });
-        console.log(response)
+        console.log(response.data.token)
         // 登录成功，存储 Token
+
         localStorage.setItem('token', response.data.token);
+        this.$message('登陆成功');
         this.$router.push('/home'); // 跳转到主页
       } catch (error) {
         // 登录失败，显示错误信息
-        // this.error = 'Invalid username or password';
-        console.error('Login failed:', error);
+        this.$message(error);
         this.error=error;
+        this.password=''
       }
     }
   }

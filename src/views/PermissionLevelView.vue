@@ -1,7 +1,7 @@
 <script>
 
 
-import HelloWorld from "@/components/HelloWorld.vue";
+import HelloWorld from "@/components/title/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 
 export default {

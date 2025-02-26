@@ -1,16 +1,19 @@
 <script>
+import axios from "@/axios";
+
 export default {
+
   data(){
     return{
       onChangeVisibility:false,
       user:{
-        id:1,
-        permissionLevel:4,
-        account:"fireworkz",
+        id:null,
+        permissionLevel:null,
+        account:"",
         password:"",
-        name:"fire",
-        tel:"18522117678",
-        email:"smart030518@126.com",
+        name:"",
+        tel:"",
+        email:"",
 
       },editForm: {
         name: "",
@@ -52,7 +55,37 @@ export default {
     saveEdit() {
       this.$refs.editForm.validate((valid) => {
         if (valid) {
-          // 更新用户信息
+          // 调用 updateInfo 方法更新用户信息
+          this.updateInfo();
+        } else {
+          // 表单验证失败，提示用户
+          this.$message.error("表单验证失败");
+        }
+      });
+    },
+    async getInfo() {
+      try {
+
+        const response = await axios.get('/account/current');
+        this.user=response.data;
+        console.log(this.user)
+      } catch (error) {
+        this.$message("获取用户信息失败:"+error.message);
+      }
+    },
+
+    async updateInfo() {
+      try {
+        // 发起请求，修改用户信息
+         await axios.post('/account/changeUserInfo', {
+          name: this.editForm.name,
+          tel: this.editForm.tel,
+          email: this.editForm.email,
+          password: this.editForm.password,
+        });
+
+        // 检查后端返回的响应，确认操作成功
+
           this.user.name = this.editForm.name;
           this.user.tel = this.editForm.tel;
           this.user.email = this.editForm.email;
@@ -63,14 +96,23 @@ export default {
           // 跳转到登录页面
           this.$router.push("/login");
 
-          this.onChangeVisibility = false;
+          // 提示用户信息已更新
           this.$message.success("用户信息已更新，请重新登录");
-        } else {
-          this.$message.error("表单验证失败");
-        }
-      });
-    }
 
+
+        // 清空表单
+        this.editForm = {
+          name: "",
+          tel: "",
+          email: "",
+          password: "",
+          confirmPassword: ""
+        };
+      } catch (error) {
+        // 捕获请求过程中的错误
+        this.$message.error("用户信息更新失败: " + error.message);
+      }
+    },
   },watch: {
     onChangeVisibility(val) {
       if (val) {
@@ -84,6 +126,8 @@ export default {
         };
       }
     }
+  }, created() {
+    this.getInfo();
   },
 }
 </script>
@@ -127,7 +171,7 @@ export default {
         <i class="el-icon-tickets"></i>
         权限等级
       </template>
-      <el-tag size="small">{{ this.user.permissionLevel }}</el-tag>
+      <el-tag size="small">{{ this.user.permissionLevel===4?"管理员":"普通用户" }}</el-tag>
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">

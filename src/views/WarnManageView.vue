@@ -1,6 +1,6 @@
 <script>
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
-import HelloWorld from "@/components/HelloWorld.vue";
+import HelloWorld from "@/components/title/HelloWorld.vue";
 import WarnTable from "@/components/table/WarnTable.vue";
 
 export default {

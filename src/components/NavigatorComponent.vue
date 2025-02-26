@@ -17,7 +17,7 @@ export default {
     },
     logoff(){
       localStorage.removeItem("token");
-
+      this.$message("成功退出登录");
       // 跳转到登录页面
       this.$router.push("/login");
     }
@@ -62,10 +62,10 @@ export default {
       <el-submenu index="4">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>监控报警</span>
+          <span>监控告警</span>
         </template>
-        <el-menu-item index="4-1" @click="goToPage('/warn/manage')">报警配置</el-menu-item>
-        <el-menu-item index="4-2" @click="goToPage('/warn/search')">报警查询</el-menu-item>
+        <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
+        <el-menu-item index="4-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
       </el-submenu>
       <el-submenu index="5">
         <template>

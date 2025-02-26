@@ -13,10 +13,11 @@ export default {
       this.currentEditIndex = this.monitorList.indexOf(row);
       this.updateForm = { ...row }; // 使用扩展运算符复制对象
     },
-    handleDelete(index) {
+    handleDelete(row) {
       // 删除逻辑
-      this.monitorList.splice(index, 1);
+      this.monitorList.splice(row.id-1, 1);
       this.dialogVisible = false;
+      this.local.row=null;
     },
     saveUpdate() {
       alert(this.updateForm.monitorResourceIds)
@@ -30,6 +31,7 @@ export default {
       // 取消修改
       this.editDialogVisible = false;
       this.updateForm = {}; // 清空表单
+      this.local.row=null
     }
   },
   data() {
@@ -38,6 +40,7 @@ export default {
       dialogVisible:false,
       local:{
         index:null,
+        row:null
       },
       monitor: {
         id:null,
@@ -55,6 +58,7 @@ export default {
         monitorName: "",
         monitorDescription: "",
         monitorResourceIds: [],
+        monitorType:"",
       },
       currentEditIndex: null, // 当前编辑的行索引
       editDialogVisible: false, // 编辑对话框的可见性
@@ -112,7 +116,7 @@ export default {
 
 <template>
   <div style="margin-top: 50px">
-    <el-row :gutter="80">
+    <el-row >
       <el-col :span="80">
         <el-input autosize v-model="searchstr" placeholder="请输入查询目标"></el-input>
       </el-col>
@@ -141,6 +145,11 @@ export default {
           width="160">
       </el-table-column>
       <el-table-column
+          prop="monitorType"
+          label="监控类型"
+          width="80">
+      </el-table-column>
+      <el-table-column
           label="监控对象指标/自定义监控语句"
           width="300">
         <template slot-scope="scope">
@@ -157,7 +166,7 @@ export default {
           label="资源描述"
           width="200">
       </el-table-column>
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作" >
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -165,7 +174,7 @@ export default {
           <el-button
               size="mini"
               type="danger"
-              @click="dialogVisible=true;local.index=scope.$index">删除</el-button>
+              @click="local.row=scope.row;dialogVisible=true;">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -185,7 +194,7 @@ export default {
             <el-option
                 v-for="item in resourceList"
                 :key="item.id"
-                :label="monitor.monitorType === 'server' ? `${item.resourceName} ${item.resourceIp}` : `${item.resourceName} ${item.resourceIp}:${item.resourcePort}`"
+                :label="updateForm.monitorType === 'server' ? `${item.resourceName} ${item.resourceIp}` : `${item.resourceName} ${item.resourceIp}:${item.resourcePort}`"
                 :value="item.id">
             </el-option>
           </el-select>
@@ -209,7 +218,7 @@ export default {
       <span>确定要删除该监控对象吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleDelete(local.index)">确 定</el-button>
+        <el-button type="primary" @click="handleDelete(local.row)">确 定</el-button>
       </span>
     </el-dialog>
   </div>

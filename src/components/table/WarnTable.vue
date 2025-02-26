@@ -12,8 +12,9 @@ export default {
     search(){
 
     },
-    update(){
+    update(row){
       this.editDialogVisible=true;
+      this.updateForm={ ...row };
     },
     handleDelete(row){
       this.warnList.splice(row.id-1, 1);
@@ -45,6 +46,29 @@ export default {
     seeDetails(row) {
       this.local.id=row.id;
       this.detailDialogVisible=true;
+    },
+    formatWarnLevel(row, column, cellValue) {
+      // 根据 warnLevel 的值返回对应的 label
+      switch (cellValue) {
+        case 0:
+          return "NOTHING";
+        case 1:
+          return "LOG_ONLY";
+        case 2:
+          return "STORE_INFO";
+        case 3:
+          return "NOTICE_USER";
+        default:
+          return "未知";
+      }
+    },
+  },
+  computed:{
+    filteredWarnList(){
+      if(this.isDetail)
+      return this.warnList.filter(item => item.monitorOn === 1);
+      else
+        return this.warnList
     }
   },
   data(){
@@ -70,6 +94,7 @@ export default {
         warnRepeatTimes: null,
         warnDescription: '',
         monitorId: null,
+        monitorName:'',
         noticeUserIds: '',
         currentStatus: null,
         startWarningTime: null,
@@ -106,6 +131,7 @@ export default {
       monitorOn: 1,
       warnName: '告警策略1',
       warnLevel: 2,
+      monitorName:'监控对象名称',
       compareType: '>=',
       warnThreshold: 10,
       warnDescription: '这是一个告警策略',
@@ -144,7 +170,7 @@ export default {
 
 <template>
     <div style="margin-top: 50px">
-      <el-row :gutter="80">
+      <el-row>
         <el-col :span="80">
           <el-input autosize v-model="searchstr" placeholder="请输入查询目标"></el-input>
         </el-col>
@@ -156,7 +182,7 @@ export default {
 
       <el-table
           border
-          :data="warnList"
+          :data="filteredWarnList"
           style="width: 100%"
           height="400">
 
@@ -166,13 +192,11 @@ export default {
             label="告警策略id"
             width="100">
         </el-table-column>
-        <el-form-item label="当前监控名称">
-          <el-input
-              v-model="monitor.monitorName"
-              placeholder="当前监控名称"
-              disabled
-          ></el-input>
-        </el-form-item>
+        <el-table-column
+            prop="monitorName"
+            label="监控对象名称"
+            width="200">
+        </el-table-column>
         <el-table-column
             fixed
             prop="warnName"
@@ -182,12 +206,18 @@ export default {
         <el-table-column
             prop="monitorOn"
             label="告警是否启用"
-            width="200">
+            width="200"
+        >
+          <template v-slot="scope">
+            {{ scope.row.monitorOn === 1 ? '启用' : '禁用' }}
+          </template>
         </el-table-column>
+
         <el-table-column
             prop="warnLevel"
             label="告警级别"
-            width="80">
+            width="200"
+            :formatter="formatWarnLevel">
         </el-table-column>
         <el-table-column
             label="告警策略"
@@ -201,7 +231,7 @@ export default {
             width="80"
         v-if="isDetail">
           <template v-slot="scope">
-            {{ scope.row.isActive ? '活跃' : '不活跃' }}
+            {{ scope.row.isActive ? '正在告警' : '安全' }}
           </template>
         </el-table-column>
 
@@ -294,16 +324,16 @@ export default {
           </el-form-item>
 
           <!-- 告警描述 -->
-          <el-form-item label="资源描述" prop="warnDescription">
+          <el-form-item label="告警描述" prop="warnDescription">
             <el-input
                 type="textarea"
                 v-model="updateForm.warnDescription"
-                placeholder="请输入资源描述"
+                placeholder="请输入告警描述"
             ></el-input>
           </el-form-item>
 
           <!-- 通知方式 -->
-          <el-form-item label="通知方式" prop="noticeWay">
+          <el-form-item label="通知方式" prop="noticeWay" v-if=" updateForm.warnLevel===3">
             <el-select v-model="updateForm.noticeWay" placeholder="请选择通知方式">
               <el-option label="消息" value="message"></el-option>
               <el-option label="邮件" value="email"></el-option>
@@ -311,7 +341,7 @@ export default {
           </el-form-item>
 
           <!-- 通知用户ID -->
-          <el-form-item label="通知用户ID" prop="noticeUserIds">
+          <el-form-item label="通知用户ID" prop="noticeUserIds" v-if=" updateForm.warnLevel===3">
             <el-input
                 v-model="updateForm.noticeUserIds"
                 placeholder="请输入通知用户ID"

@@ -1,6 +1,7 @@
 <script>
 import ResourceDetailComponent from "@/components/discription/ResourceDetailDescription.vue";
 
+
 export default {
   methods: {
     closeDetails() {
@@ -72,8 +73,9 @@ export default {
 </script>
 
 <template>
+
   <div style="margin-top: 50px">
-    <el-row :gutter="80" v-if="editAllow">
+    <el-row  v-if="editAllow">
       <el-col :span="80">
         <el-input autosize v-model="local.searchstr" placeholder="请输入内容"></el-input>
       </el-col>

@@ -9,7 +9,7 @@
           <HelloWorld msg="系统主页" />
         </el-header>
         <el-main>
-          <HelloWorld msg="高院长" />
+          <page-label label="欢迎来到微服务管理系统!"></page-label>
           <DashBoardComponent></DashBoardComponent>
         </el-main>
       </el-container>
@@ -19,15 +19,17 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from '@/components/title/HelloWorld.vue'
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 import DashBoardComponent from "@/components/DashBoardComponent.vue";
+import PageLabel from "@/components/title/PageLabel.vue";
 export default {
   name: 'HomeView',
   components: {
     HelloWorld,
     NavigatorComponent,
     DashBoardComponent,
+    PageLabel
   }
 }
 </script>
