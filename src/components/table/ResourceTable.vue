@@ -1,5 +1,7 @@
 <script>
 import ResourceDetailComponent from "@/components/discription/ResourceDetailDescription.vue";
+import axios from "@/axios";
+
 
 
 export default {
@@ -9,25 +11,123 @@ export default {
       this.local.resourceType='';
       this.showDetail=false;
     },
-    handleDelete(row) {
-      this.tableData.splice(row.id-1, 1);
-      this.dialogVisible = false;
-      this.local.row=null;
+    async handleDelete(row) {
+      try {
+        if (row.resourceType === "server") {
+          await axios.post('/resource/deleteServer', null, {
+            params: {
+              id: row.id
+            }
+          });
+        } else if (row.resourceType === "software") {
+          await axios.post('/resource/deleteSoftware', null, {
+            params: {
+              id: row.id
+            }
+          });
+        } else throw new Error("未知资源类型");
+        this.tableData.splice(row.id - 1, 1);
+        this.dialogVisible = false;
+      } catch (error) {
+        this.$message.error(error);
+      }
+      this.local.row = null;
     },
     filterHandler(value, row, column){
       const property = column['property'];
       console.log(value)
       return row[property] === value;
-    },search(){
-      this.local.searchstr=''
     },
     seeDetails(row){
       this.local.showId=row.id;
       this.local.resourceType=row.resourceType;
       this.showDetail=true;
+    },
+    formatterHandler(row, column, cellValue){
+        // 根据 warnLevel 的值返回对应的 label
+        switch (cellValue) {
+          case 'server':
+            return "服务器";
+          case 'software':
+            return "软件资源";
+          default:
+            return "未知";
+
+      }
+    },
+    formatterHandlerForResource(row, column, cellValue){
+      switch (cellValue) {
+        case '0':
+          return "否";
+        case '1':
+          return "是";
+        default:
+          return "未知";
+
+      }
+    },
+    async fetchData(){
+      try{
+      let url=null;
+      if(this.resourceType==='server'){
+        url='/resource/selectServer';
+        this.tableData=(await axios.post(url)).data;
+        console.log(this.tableData)
+      }else if(this.resourceType==='software'){
+        url='/resource/selectSoftware';
+        this.tableData=(await axios.post(url)).data;
+        console.log(this.tableData)
+      }else{
+        this.tableData1=(await axios.post('/resource/selectSoftware')).data;
+        this.tableData=(await axios.post('/resource/selectServer')).data;
+        this.tableData=this.tableData1.concat(this.tableData);
+        this.tableData.sort((a,b)=>b.age-a.age)
+      }
+      }catch (error){
+        this.$message.error(error);
+        this.tableData=[];
+        this.tableData1=[];
+      }
+    },async searchData(){
+      try{
+          this.tableData1=(await axios.post('/resource/selectServer', null, {
+            params: {
+              str:this.local.searchstr
+            }
+          })).data;
+          this.tableData=(await axios.post('/resource/selectSoftware', null, {
+            params: {
+              str:this.local.searchstr
+            }
+          })).data;
+          this.tableData=this.tableData1.concat(this.tableData);
+          this.tableData.sort((a,b)=>b.age-a.age)
+      }catch (error){
+        this.$message.error(error);
+        // this.tableData=[];
+        // this.tableData1=[];
+      }
+      this.local.searchstr='';
+    },
+    async changeStatus(row) {
+      try {
+        this.local.row = JSON.parse(JSON.stringify(row));
+        if (this.local.row.resourceManageOn === 0)
+          this.local.row.resourceManageOn = 1;
+        else
+          this.local.row.resourceManageOn = 0;
+        const response= this.tableData = (await axios.post('/resource/edit',this.local.row));
+        if(response.code===200)
+        row.resourceManageOn=this.local.row.resourceManageOn;
+        this.statusDialogVisible=false;
+        this.$message('切换成功');
+      }catch (error){
+        this.$message.error(error);
+      }
+      this.local.row=null;
     }
   },
-  props:["editAllow"],
+  props:["editAllow","resourceType"],
   data(){
     return{
       local:{
@@ -39,35 +139,15 @@ export default {
       },
       showDetail:false,
       dialogVisible:false,
-      tableData:[{
-        id:1,
-        resourceName:'阿里云',
-        resourceType:'server',
-        resourceIp:'180.180.180.180',
-        resourcePort:'9900',
-        resourceTypeSecond:'nacos',
-        addedTime:'2',
-        resourceMonitorOn:'1',
-        resourceDescription:'阿达伟大伟大达瓦',
-        resourceUp:'1',
-        startMode:'docker',
-      },{
-        id:2,
-        resourceName:'不知道什么云',
-        resourceType:'software',
-        resourceIp:'180.180.180.180',
-        resourcePort:'9900',
-        resourceTypeSecond:'nacos',
-        addedTime:'1',
-        resourceMonitorOn:'1',
-        resourceDescription:'阿达伟大伟大达瓦',
-        resourceUp:'1',
-        startMode:'docker',
-      }]
+      statusDialogVisible:false,
+      tableData:[],
+      tableData1:[]
     }
   },
   components:{
     ResourceDetailComponent
+  },mounted() {
+    this.fetchData();
   }
 };
 </script>
@@ -76,11 +156,12 @@ export default {
 
   <div style="margin-top: 50px">
     <el-row  v-if="editAllow">
-      <el-col :span="80">
+      <el-col :span="4">
         <el-input autosize v-model="local.searchstr" placeholder="请输入内容"></el-input>
       </el-col>
-      <el-col :span="80">
-        <el-button type="primary" @click="search">搜索</el-button>
+      <el-col :span="4">
+        <el-button type="primary" @click="searchData">搜索</el-button>
+        <el-button  @click="fetchData">重置</el-button>
       </el-col>
     </el-row>
     <div style="margin-top: 50px"></div>
@@ -93,11 +174,10 @@ export default {
       <el-table-column
           fixed
           prop="id"
-          label="资源id"
-          width="120">
+          label="id"
+          width="60">
       </el-table-column>
       <el-table-column
-          fixed
           prop="resourceName"
           label="资源名称"
           width="150">
@@ -106,42 +186,53 @@ export default {
           fixed
           :filters="[{text: '服务器', value: 'server'}, {text: '软件资源', value: 'software'}]"
           :filter-method="filterHandler"
+          :formatter="formatterHandler"
           prop="resourceType"
           label="资源类型"
-          width="120">
+          v-if="resourceType==null"
+          width="80">
       </el-table-column>
       <el-table-column
           prop="resourceIp"
           label="IP"
-          width="180">
+          width="150">
       </el-table-column>
       <el-table-column
-          prop="resourcePort"
           label="Port"
-          width="90">
+          v-if="resourceType!=='server'"
+          width="75">
+        <template slot-scope="scope">
+          {{ scope.row.resourcePort ||  '——' }}
+        </template>
       </el-table-column>
       <el-table-column
-          prop="resourceTypeSecond"
           label="二级类型"
+          v-if="resourceType!=='server'"
           width="90">
+        <template slot-scope="scope">
+          {{ scope.row.resourceTypeSecond ||  '——' }}
+        </template>
       </el-table-column>
       <el-table-column
           prop="addedTime"
           label="添加时间"
-          width="180">
+          width="240">
       </el-table-column>
       <el-table-column
-          prop="startMode"
           label="启动模式"
-          >
+          v-if="resourceType!=='server'"
+          width="80"
+          ><template slot-scope="scope">
+          {{ scope.row.startMode ||  '——' }}
+        </template>
       </el-table-column>
-      <el-table-column v-if="editAllow" label="监控是否启动" width="80">
+      <el-table-column v-if="editAllow" :formatter="formatterHandlerForResource" label="资源状态" width="120">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>监控是否启动: {{ scope.row.resourceMonitorOn }}</p>
-            <p>资源是否上线: {{ scope.row.resourceUp }}</p>
+            <p>是否启动监控: {{ scope.row.resourceManageOn===0?'未启用':'已启用' }}</p>
+            <p>资源是否上线: {{ scope.row.resourceUp===0?'否':'是' }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.resourceMonitorOn }}</el-tag>
+              <el-tag size="medium">{{ scope.row.resourceManageOn===0?'未启用':'已启用' }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -154,11 +245,26 @@ export default {
           <el-button
               size="mini"
               type="danger"
-              @click="dialogVisible=true;this.local.row=scope.row">删除</el-button>
+              @click="local.row=scope.row;dialogVisible=true;">删除</el-button>
+          <el-button
+              size="mini"
+              :type="scope.row.resourceManageOn?'danger':'primary'"
+              @click="local.row=scope.row;statusDialogVisible=true">切换资源启用状态</el-button>
         </template>
       </el-table-column>
     </el-table>
 
+    <el-dialog
+        title="提示"
+        :visible.sync="statusDialogVisible"
+        width="30%"
+    >
+      <span>确定要切换资源状态吗？</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="statusDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="changeStatus(local.row)">确 定</el-button>
+  </span>
+    </el-dialog>
     <el-dialog
         title="提示"
         :visible.sync="dialogVisible"

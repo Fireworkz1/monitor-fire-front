@@ -2,21 +2,75 @@
 
 
 
+import axios from "@/axios";
+
 export default {
   props:["idd","type"],
   data(){
     return{
       res:{},
       resourceId:null,
+      softwareDetailRes:{
+        prometheusUp: null,
+        prometheusJobname: "",
+        prometheusInstance: "",
+        resouceId: null,
+        resouceName: "",
+        resouceIp: "",
+        resourceType: "",
+        exporterType: "",
+        resourceDescription: "",
+        resourcePort: "",
+        startMode: ""
+      },
+      hardwareDetailRes:{
+        prometheusUp: null, // Integer
+        prometheusJobname: "", // String
+        prometheusInstance: "", // String
+        resouceId: null, // Integer
+        resouceName: "", // String
+        resouceIp: "", // String
+        resourceType: "", // String
+        exporterType: "", // String
+        resourceDescription: "", // String
+
+        prometheusCpuNums: "", // String
+        prometheusTotalMemoryGBs: null, // Double
+        prometheusAvailableFileGBs: null, // Double
+        prometheusServerloadtime: "", // String
+        machine: "", // String
+        sysname: "", // String
+        version: "", // String
+        nodename: "" // String
+      }
 
     }
   }
   ,methods:{
-    getHard(){
+    async getHard() {
+      try{
+        this.hardwareDetailRes= (await axios.post('/resource/selectServerDetail', null, {
+          params: {
+            id:this.idd
+          }
+        })).data;
+        this.res=this.hardwareDetailRes;
+      }catch (error){
+        this.$message.error(error)
+      }
 
     },
-    getSoft(){
-
+    async getSoft() {
+      try {
+        this.softwareDetailRes=(await axios.post('/resource/selectSoftwareDetail', null, {
+          params: {
+            id: this.idd
+          }
+        })).data;
+        this.res=this.softwareDetailRes;
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
   },components:{
 
@@ -26,11 +80,9 @@ export default {
     // console.log(this.idd);
     console.log(this.type);
     if(this.type==="server"){
-      // this.hardwareDetailRes=this.getHard();
-      this.res=this.hardwareDetailRes;
+      this.getHard();
     }else{
-      // this.softwareDetailRes=this.getSoft();
-      this.res=this.softwareDetailRes;
+      this.getSoft();
     }
   }
 }
@@ -40,24 +92,28 @@ export default {
   <div>
 
     <el-descriptions >
-      <el-descriptions-item label="资源id">11</el-descriptions-item>
-      <el-descriptions-item label="资源名称">123</el-descriptions-item>
+      <el-descriptions-item label="资源id">{{this.res.resourceId}}</el-descriptions-item>
+      <el-descriptions-item label="资源名称">{{this.res.resourceName}}</el-descriptions-item>
       <el-descriptions-item label="资源是否在线">
-        <el-tag size="small">学校</el-tag>
+        <el-tag size="small">{{ this.res.prometheusUp }}</el-tag>
       </el-descriptions-item>
-      <el-descriptions-item label="监控Jobname">18100000000</el-descriptions-item>
-      <el-descriptions-item label="监控实例">苏州市</el-descriptions-item>
-      <el-descriptions-item label="资源ip">苏州市</el-descriptions-item>
-      <el-descriptions-item label="Port" v-if="this.type==='software'">port</el-descriptions-item>
-      <el-descriptions-item label="启动方式" v-if="this.type==='software'">方式</el-descriptions-item>
-      <el-descriptions-item label="资源类型">苏州市</el-descriptions-item>
-      <el-descriptions-item label="采集器类型">苏州市</el-descriptions-item>
-      <el-descriptions-item label="资源描述">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+      <el-descriptions-item label="监控Jobname">{{ this.res.prometheusJobname }}</el-descriptions-item>
+      <el-descriptions-item label="监控实例">{{ this.res.prometheusInstance }}</el-descriptions-item>
+      <el-descriptions-item label="资源ip">{{ this.res.resourceIp }}</el-descriptions-item>
+      <el-descriptions-item label="Port" v-if="this.type==='software'">{{ this.res.resourcePort }}</el-descriptions-item>
+      <el-descriptions-item label="启动方式" v-if="this.type==='software'">{{ this.res.startMode }}</el-descriptions-item>
+      <el-descriptions-item label="资源类型">{{ this.res.resourceType }}</el-descriptions-item>
+      <el-descriptions-item label="采集器类型">{{ this.res.exporterType }}</el-descriptions-item>
+      <el-descriptions-item label="资源描述">{{ this.res.resourceDescription }}</el-descriptions-item>
 
-      <el-descriptions-item v-if="type==='server'" label="CPU核心数量">4</el-descriptions-item>
-      <el-descriptions-item v-if="type==='server'" label="服务器总内存/GB">155</el-descriptions-item>
-      <el-descriptions-item v-if="type==='server'" label="可用存储空间/GB">111</el-descriptions-item>
-      <el-descriptions-item v-if="type==='server'" label="服务器启动时间/秒">12345</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="CPU核心数量">{{ this.res.prometheusCpuNums }}</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="服务器总内存">{{ this.res.prometheusTotalMemoryGBs }} GBs</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="可用存储空间">{{ this.res.prometheusAvailableFileGBs }} GBs</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="服务器启动时间">{{ this.res.prometheusServerloadtime }} seconds</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="操作系统">{{ this.res.sysname }}</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="架构">{{ this.res.machine }}</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="操作系统版本">{{ this.res.version }}</el-descriptions-item>
+      <el-descriptions-item v-if="type==='server'" label="标识符">{{ this.res.nodename }}</el-descriptions-item>
     </el-descriptions>
   </div>
 </template>

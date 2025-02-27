@@ -25,7 +25,7 @@ export default {
         resourceType: 'server',
         resourceName: '',
         resourceIp:'',
-        resourceMonitorOn:0,
+        resourceManageOn:0,
         resourceDescription:'',
         hardResourceUsername:'',
         hardResourcePassword:'',
@@ -37,7 +37,7 @@ export default {
         resourceTypeSecond:'',
         resourceIp:'',
         ResourcePort:'',
-        resourceMonitorOn:0,
+        resourceManageOn:0,
         resourceDescription:'',
         startMode:'',
       }

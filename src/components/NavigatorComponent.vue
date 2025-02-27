@@ -42,7 +42,7 @@ export default {
           <span>资源控制</span>
         </template>
 <!--        <el-menu-item index="1-1">资源总览</el-menu-item>-->
-        <el-menu-item index="1-1" @click="goToPage('/form/register')">资源注册</el-menu-item>
+        <el-menu-item index="1-1" @click="goToPage('/form/register')">资源配置</el-menu-item>
         <el-menu-item index="1-2" @click="goToPage('/form/manage')">资源管理</el-menu-item>
         <el-menu-item index="1-3" @click="goToPage('/form/auto')" disabled>自动化配置</el-menu-item>
 
