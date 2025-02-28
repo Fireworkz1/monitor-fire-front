@@ -4,16 +4,19 @@
 
 
 
+import axios from "@/axios";
+
 export default {
-  props:["idd","isDetail"],
+  props:["warnEntity","isDetail","monitorEntity"],
+
   data(){
     return{
       warnList:[],
-      warn:{
+      warnDetail:{
         id: null,
-        monitorOn: 1,
+        monitorOn: null,
         warnName: '',
-        warnLevel: 3,
+        warnLevel: null,
         warnSource: '',
         warnSourceType: '',
         compareType: '',
@@ -32,17 +35,34 @@ export default {
       user:{
         id:null,
         name:'',
-      }
+      },
+      monitor:{
 
+      }
     }
   }
   ,methods:{
+    async fetchData() {
+      try {
+        if (this.warnEntity == null)
+          throw new Error("状态错误，请重新打开页面");
+        this.warnDetail = this.warnEntity;
+        this.monitor = (await axios.post('/monitor/selectById',null,{
+          params:{
+            monitorId:this.warnDetail.monitorId
+          }
+        })).data;
+      } catch (error) {
+        this.$message.error(error);
+      }
 
+    },
   },components:{
 
 
   },mounted() {
-    this.id=this.idd;
+    console.log(this.warnEntity)
+    this.fetchData();
   }
 }
 </script>
@@ -50,38 +70,62 @@ export default {
 <template>
   <div>
 
-    <el-descriptions >
+    <el-descriptions>
       <el-descriptions-item label="告警是否启用">
-        <el-tag size="small">{{warn.monitorOn}}</el-tag>
+        <el-tag size="small">{{ warnDetail.monitorOn === 1 ? '启用' : '未启用' }}</el-tag>
       </el-descriptions-item>
-      <el-descriptions-item label="策略名称">123</el-descriptions-item>
+      <el-descriptions-item label="策略名称">
+        {{ warnDetail.warnName || '暂无名称' }}
+      </el-descriptions-item>
       <el-descriptions-item label="告警级别">
-        <el-tag size="small">学校</el-tag>
+        <el-tag size="small">{{ warnDetail.warnLevel || '暂无级别' }}</el-tag>
       </el-descriptions-item>
-      <el-descriptions-item label="告警监控对象">18100000000</el-descriptions-item>
-      <el-descriptions-item label="策略备注">苏州市</el-descriptions-item>
-      <el-descriptions-item label="监控类型">苏州市</el-descriptions-item>
-      <el-descriptions-item label="监控策略">苏州市</el-descriptions-item>
-      <el-descriptions-item label="监控阈值">port</el-descriptions-item>
-      <el-descriptions-item label="是否正在告警" v-if="isDetail&&warn.monitorOn===1">苏州市</el-descriptions-item>
-      <el-descriptions-item label="告警次数" v-if="isDetail&&warn.monitorOn===1&&warn.isActive===1">方式</el-descriptions-item>
-      <el-descriptions-item label="告警开始时间" v-if="isDetail&&warn.monitorOn===1&&warn.isActive===1">苏州市</el-descriptions-item>
-      <el-descriptions-item label="最后一次告警时间" v-if="isDetail&&warn.monitorOn===1&&warn.isActive===1">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-      <el-descriptions-item label="是否已经发送警告" v-if="isDetail&&warn.monitorOn===1&&warn.isActive===1&&warn.warnLevel===3">苏州市</el-descriptions-item>
-      <el-descriptions-item label="告警方式" v-if="warn.warnLevel===3">苏州市</el-descriptions-item>
-      <el-descriptions-item label="通知人员列表" v-if="warn.warnLevel===3"><div v-if="userList.length > 0">
-        <el-tag
-            v-for="(user, index) in userList"
-            :key="index"
-            style="margin-right: 8px; margin-bottom: 8px;"
-        >
-          {{ user.name }} (ID: {{ user.id }})
-        </el-tag>
-      </div>
+      <el-descriptions-item label="告警监控对象">
+        {{ warnDetail.warnSource || '暂无监控对象' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="策略备注">
+        {{ warnDetail.warnDescription || '暂无备注' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="监控类型">
+        {{ warnDetail.warnSourceType || '暂无类型' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="监控策略">
+        {{ warnDetail.compareType || '暂无策略' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="监控阈值">
+        {{ warnDetail.warnThreshold || '暂无阈值' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="是否正在告警" v-if="isDetail && warnDetail.monitorOn === 1">
+        {{ warnDetail.isActive === 1 ? '是' : '否' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="告警次数" v-if="isDetail && warnDetail.monitorOn === 1 && warnDetail.isActive === 1">
+        {{ warnDetail.warnRepeatTimes || 0 }}
+      </el-descriptions-item>
+      <el-descriptions-item label="告警开始时间" v-if="isDetail && warnDetail.monitorOn === 1 && warnDetail.isActive === 1">
+        {{ warnDetail.startWarningTime || '暂无时间' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="最后一次告警时间" v-if="isDetail && warnDetail.monitorOn === 1 && warnDetail.isActive === 1">
+        {{ warnDetail.lastWarningTime || '暂无时间' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="是否已经发送警告" v-if="isDetail && warnDetail.monitorOn === 1 && warnDetail.isActive === 1 && warnDetail.warnLevel === 3">
+        {{ warnDetail.hasSentNotice === 1 ? '已发送' : '未发送' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="告警方式" v-if="warnDetail.warnLevel === 3">
+        {{ warnDetail.noticeWay || '暂无方式' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="通知人员列表" v-if="warnDetail.warnLevel === 3">
+        <div v-if="userList.length > 0">
+          <el-tag
+              v-for="(user, index) in userList"
+              :key="index"
+              style="margin-right: 8px; margin-bottom: 8px;">
+            {{ user.name }} (ID: {{ user.id }})
+          </el-tag>
+        </div>
         <div v-else>
           暂无通知人员
-        </div></el-descriptions-item>
-
+        </div>
+      </el-descriptions-item>
     </el-descriptions>
   </div>
 </template>

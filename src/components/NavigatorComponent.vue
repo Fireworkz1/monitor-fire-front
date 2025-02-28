@@ -66,10 +66,11 @@ export default {
         </template>
         <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
         <el-menu-item index="4-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
+        <el-menu-item index="4-2" @click="goToPage('/warn/search')" disabled>我的告警</el-menu-item>
       </el-submenu>
       <el-submenu index="5">
         <template>
-          <span slot="title"><i class="el-icon-setting"></i>权限分级</span>
+          <span slot="title"><i class="el-icon-setting"></i>用户管理</span>
         </template>
         <el-submenu index="5-1">
           <template slot="title">权限管理</template>

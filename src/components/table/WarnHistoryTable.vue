@@ -1,5 +1,6 @@
 <script>
 import WarnDetailDescription from "@/components/discription/WarnDetailDescription.vue";
+import axios from "@/axios";
 
 
 export default {
@@ -9,8 +10,29 @@ export default {
     WarnDetailDescription
   },
   methods:{
-    search(){
+    async fetchData(){
+      try{
+        this.warnList=(await axios.post('/warn/warnhistory')).data;
 
+      }catch (error){
+        this.$message.error(error);
+        this.warnList=[];
+
+      }
+    },
+    async searchData() {
+      try {
+        this.warnList = (await axios.post('/warn/warnhistory',null,{
+          params: {
+            str:this.searchstr
+          }
+        })).data;
+
+      } catch (error) {
+        this.$message.error(error);
+        this.warnList = [];
+
+      }
     },
     update(row){
       this.editDialogVisible=true;
@@ -126,55 +148,8 @@ export default {
       }
     }
   },
-  mounted() {this.warnList = [
-    {
-      id: 1,
-      warnPolicyId:1,
-      monitorOn: 1,
-      warnName: '告警策略1',
-      warnLevel: 2,
-      monitorName:'监控对象名称',
-      compareType: '>=',
-      warnThreshold: 10,
-      warnDescription: '这是一个告警策略',
-      noticeUserIds: '1,2,3',
-      noticeWay: 'message',
-      isActive: 1,
-      startWarningTime: 1,
-      lastWarningTime: 3,
-    },
-    {
-      id: 2,
-      warnPolicyId:3,
-      monitorOn: 1,
-      warnName: '告警策略3',
-      warnLevel: 1,
-      compareType: '<=',
-      warnThreshold: 5,
-      warnDescription: '这是一个活跃的告警策略',
-      noticeUserIds: '6',
-      noticeWay: 'message',
-      isActive: 1,
-      startWarningTime: 3,
-      lastWarningTime: 4,
-    },
-    {
-      id: 3,
-      warnPolicyId:2,
-      monitorOn: 0,
-      warnName: '告警策略2',
-      warnLevel: 3,
-      compareType: '==',
-      warnThreshold: 20,
-      warnDescription: '这是一个禁用的告警策略',
-      noticeUserIds: '4,5',
-      noticeWay: 'email',
-      isActive: 0,
-      startWarningTime:2,
-      lastWarningTime: 5,
-    },
-
-  ];
+  mounted() {
+    this.fetchData();
   }
 }
 </script>
@@ -183,11 +158,12 @@ export default {
 
   <div style="margin-top: 50px">
     <el-row>
-      <el-col :span="80">
+      <el-col :span="4">
         <el-input autosize v-model="searchstr" placeholder="请输入查询目标"></el-input>
       </el-col>
-      <el-col :span="80">
-        <el-button type="primary" @click="search">搜索</el-button>
+      <el-col :span="4">
+        <el-button type="primary" @click="searchData">搜索</el-button>
+        <el-button  @click="fetchData">重置</el-button>
       </el-col>
     </el-row>
     <div style="margin-top: 50px"></div>

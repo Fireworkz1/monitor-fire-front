@@ -2,11 +2,12 @@
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 import HelloWorld from "@/components/title/HelloWorld.vue";
 import WarnTable from "@/components/table/WarnTable.vue";
+import WarnRegisterForm from "@/components/form/WarnRegisterForm.vue";
 
 export default {
   components: {
     WarnTable,
-    NavigatorComponent, HelloWorld
+    NavigatorComponent, HelloWorld,WarnRegisterForm
 
   }
 }
@@ -23,6 +24,7 @@ export default {
           <HelloWorld msg="报警配置页" />
         </el-header>
         <el-main>
+          <warn-register-form></warn-register-form>
           <warn-table></warn-table>
         </el-main>
       </el-container>

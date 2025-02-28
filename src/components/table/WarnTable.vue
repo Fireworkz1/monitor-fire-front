@@ -1,5 +1,6 @@
 <script>
 import WarnDetailDescription from "@/components/discription/WarnDetailDescription.vue";
+import axios from "@/axios";
 
 
 export default {
@@ -9,42 +10,79 @@ export default {
     WarnDetailDescription
   },
   methods:{
-    search(){
 
-    },
     update(row){
       this.editDialogVisible=true;
       this.updateForm={ ...row };
     },
     handleDelete(row){
-      this.warnList.splice(row.id-1, 1);
-      this.dialogVisible = false;
-      this.local.row=null;
-    },
-    saveUpdate() {
-      // 保存修改
-      if (this.currentEditIndex !== null) {
-        this.$set(this.warnList, this.currentEditIndex, { ...this.updateForm });
+      try{
+        axios.post('/warn/delete',null,{
+          params:{
+            warnPolicyId:row.id
+          }
+        });
+        this.warnList.splice(row.id-1, 1);
+        this.dialogVisible = false;
+        this.local.row=null;
+      }catch (error){
+        this.$message.error(error);
       }
-      this.editDialogVisible = false; // 关闭对话框
+
+    },
+    async saveUpdate() {
+      // 保存修改
+      try {
+        if (this.currentEditIndex !== null) {
+          await axios.post('/warn/update',this.updateForm);
+          window.location.reload();
+        }
+
+        this.$message('编辑成功!');
+        this.editDialogVisible = false; // 关闭对话框
+      } catch (error) {
+        this.$message.error(error)
+      }
+
     },
     cancelUpdate() {
       // 取消修改
       this.editDialogVisible = false;
       this.updateForm = {}; // 清空表单
     },
-    changeActive(row){
-      if(row.monitorOn===1){
-        row.monitorOn=0;
-      }else if(row.monitorOn===0){
-        row.monitorOn=1;
-      }else{console.log()}
+    async changeActive(row) {
+      try {
+        let temp=null;
+        if (row.monitorOn === 1) {
+          temp = 0;
+        } else if (row.monitorOn === 0) {
+          temp = 1;
+        } else {
+          console.log()
+        }
+        await axios.post('/warn/changeMonitorOn', null,{
+          params:{
+            id:row.id,
+            monitorOn:temp
+          }
+        });
+        this.$message("告警监控状态已切换!");
+        row.monitorOn= temp;
+        this.changeDialogVisible=false;
+      } catch (error) {
+        this.$message.error(error);
+      }
+
     },
     closeDetails(){
+
+
       this.detailDialogVisible=false;
+      this.local.row=null;
+      this.$forceUpdate();
     },
     seeDetails(row) {
-      this.local.id=row.id;
+      this.local.row=row;
       this.detailDialogVisible=true;
     },
     formatWarnLevel(row, column, cellValue) {
@@ -62,6 +100,31 @@ export default {
           return "未知";
       }
     },
+    async fetchData(){
+      try{
+          this.warnList=(await axios.post('/warn/getWarn')).data;
+          this.monitorList=(await axios.post('/monitor/selectLike')).data;
+      }catch (error){
+        this.$message.error(error);
+        this.warnList=[];
+        this.monitorList=[];
+
+      }
+    },
+    async searchData() {
+      try {
+        this.warnList = (await axios.post('/warn/getWarn',null,{
+          params: {
+            str:this.searchstr
+          }
+        })).data;
+
+      } catch (error) {
+        this.$message.error(error);
+        this.warnList = [];
+
+      }
+    },
   },
   computed:{
     filteredWarnList(){
@@ -69,15 +132,27 @@ export default {
       return this.warnList.filter(item => item.monitorOn === 1);
       else
         return this.warnList
+    },
+    monitorMap() {
+      const map = {};
+      this.monitorList.forEach(item => {
+        map[item.id] = item;
+      });
+      return map;
     }
   },
   data(){
     return{
       searchstr:'',
       warnList:[],
+      monitorList:[],
       dialogVisible:false,
       editDialogVisible:false,
       detailDialogVisible:false,
+      changeDialogVisible:false,
+      local1:{
+        row:null,
+      },
       local:{
         row:null,
         id:null,
@@ -114,56 +189,30 @@ export default {
         monitorType: ""
       },
       updateForm:{
-        monitorOn: null,
-        warnName: '',
-        warnLevel: null,
-        compareType: '',
-        warnThreshold: null,
-        warnDescription: '',
-        noticeUserIds: '',
-        noticeWay: '',
+        id: null, // Integer
+        monitorOn: null, // Integer
+        warnName: "", // String
+        warnLevel: null, // Integer
+        warnSource: "", // String
+        warnSourceType: "", // String
+        compareType: "", // String
+        warnThreshold: null, // Double
+        warnRepeatTimes: null, // Integer
+        warnDescription: "", // String
+        monitorId: null, // Integer
+        monitorName: "", // String
+        noticeUserIds: "", // String
+        currentStatus: "", // String
+        startWarningTime: null, // Date
+        lastWarningTime: null, // Date
+        isActive: null, // Integer
+        hasSentNotice: null, // Integer
+        noticeWay: ""
       }
     }
   },
-  mounted() {this.warnList = [
-    {
-      id: 1,
-      monitorOn: 1,
-      warnName: '告警策略1',
-      warnLevel: 2,
-      monitorName:'监控对象名称',
-      compareType: '>=',
-      warnThreshold: 10,
-      warnDescription: '这是一个告警策略',
-      noticeUserIds: '1,2,3',
-      noticeWay: 'message',
-      isActive: 1
-    },
-    {
-      id: 2,
-      monitorOn: 0,
-      warnName: '告警策略2',
-      warnLevel: 3,
-      compareType: '==',
-      warnThreshold: 20,
-      warnDescription: '这是一个禁用的告警策略',
-      noticeUserIds: '4,5',
-      noticeWay: 'email',
-      isActive: 0
-    },
-    {
-      id: 3,
-      monitorOn: 1,
-      warnName: '告警策略3',
-      warnLevel: 1,
-      compareType: '<=',
-      warnThreshold: 5,
-      warnDescription: '这是一个活跃的告警策略',
-      noticeUserIds: '6',
-      noticeWay: 'message',
-      isActive: 1
-    }
-  ];
+  mounted() {
+  this.fetchData();
   }
 }
 </script>
@@ -171,11 +220,12 @@ export default {
 <template>
     <div style="margin-top: 50px">
       <el-row>
-        <el-col :span="80">
+        <el-col :span="4">
           <el-input autosize v-model="searchstr" placeholder="请输入查询目标"></el-input>
         </el-col>
-        <el-col :span="80">
-          <el-button type="primary" @click="search">搜索</el-button>
+        <el-col :span="4">
+          <el-button type="primary" @click="searchData">搜索</el-button>
+          <el-button  @click="fetchData">重置</el-button>
         </el-col>
       </el-row>
       <div style="margin-top: 50px"></div>
@@ -189,13 +239,8 @@ export default {
         <el-table-column
             fixed
             prop="id"
-            label="告警策略id"
-            width="100">
-        </el-table-column>
-        <el-table-column
-            prop="monitorName"
-            label="监控对象名称"
-            width="200">
+            label="id"
+            width="50">
         </el-table-column>
         <el-table-column
             fixed
@@ -206,18 +251,31 @@ export default {
         <el-table-column
             prop="monitorOn"
             label="告警是否启用"
-            width="200"
+            width="120"
         >
           <template v-slot="scope">
-            {{ scope.row.monitorOn === 1 ? '启用' : '禁用' }}
+            {{ scope.row.monitorOn === 1 ? '已启用' : '未启用' }}
           </template>
         </el-table-column>
 
         <el-table-column
             prop="warnLevel"
             label="告警级别"
-            width="200"
+            width="140"
             :formatter="formatWarnLevel">
+        </el-table-column>
+
+        <el-table-column
+            prop="monitorName"
+            label="监控对象名称"
+            width="130">
+        </el-table-column>
+        <el-table-column
+            label="监控对象指标"
+            width="300">
+          <template v-slot="scope">
+            {{ monitorMap[scope.row.monitorId].monitorPresetTarget || monitorMap[scope.row.monitorId].monitorNotpresetPromql||'暂无监控对象' }}
+          </template>
         </el-table-column>
         <el-table-column
             label="告警策略"
@@ -227,13 +285,36 @@ export default {
         </template>
         </el-table-column>
         <el-table-column
-            label="当前状态"
-            width="80"
-        v-if="isDetail">
-          <template v-slot="scope">
-            {{ scope.row.isActive ? '正在告警' : '安全' }}
+            label="告警对象"
+            width="100">
+          <template slot-scope="scope">
+            <el-popover
+                placement="top-start"
+                title="当前告警数据"
+                width="500"
+                trigger="hover"
+                v-if="scope.row.isActive===1"
+                :content="scope.row.currentWarnTarget"
+                  >
+              <el-button slot="reference">点我</el-button>
+            </el-popover>
+            <div v-if="scope.row.isActive===0">   安全</div>
           </template>
+
         </el-table-column>
+        <el-table-column
+          label="当前状态"
+          width="100"
+          v-if="isDetail">
+        <template v-slot="scope">
+          <el-tag
+              :closable="false"
+              :color="scope.row.isActive ? 'red' : 'success'"
+              effect="dark">
+            {{ scope.row.isActive ? '正在告警' : '安全' }}
+          </el-tag>
+        </template>
+      </el-table-column>
 
 
         <el-table-column label="操作" >
@@ -252,20 +333,35 @@ export default {
                 @click="dialogVisible=true;local.row=scope.row">删除</el-button>
             <el-button
                 size="mini"
-                type="primary"
+                :type="scope.row.monitorOn?'danger':'primary'"
                 v-if="!isDetail"
-                @click="changeActive(scope.row)">打开/关闭告警</el-button>
+                @click="changeDialogVisible=true;local1.row=scope.row">启用/禁用告警监控</el-button>
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog
+          title="提示"
+          :visible.sync="changeDialogVisible"
+          width="30%"
+      >
+        <span>确定要要切换监控状态吗？</span>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="local1.row=null; changeDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="changeActive(local1.row)">确 定</el-button>
+      </span>
+      </el-dialog>
+
+
       <!--详情对话框 -->
 
       <el-dialog
-          title="规则详情"
+          v-if="detailDialogVisible"
+          :title="isDetail?'告警详情':'规则详情'"
           :visible.sync="detailDialogVisible"
           width="80%"
       >
-        <warn-detail-description :idd="local.id" :is-detail="this.isDetail"></warn-detail-description>
+        <warn-detail-description :warn-entity="local.row" :is-detail="isDetail"></warn-detail-description>
         <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="closeDetails">确 定</el-button>
             </span>
@@ -298,7 +394,7 @@ export default {
           </el-form-item>
 
           <!-- 是否启用监控 -->
-          <el-form-item label="监控状态">
+          <el-form-item label="告警监控状态">
             <el-radio-group v-model="updateForm.monitorOn">
               <el-radio :label="1">启用</el-radio>
               <el-radio :label="0">禁用</el-radio>
