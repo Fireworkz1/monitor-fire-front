@@ -286,6 +286,7 @@ export default {
         </el-table-column>
         <el-table-column
             label="告警对象"
+            v-if="isDetail"
             width="100">
           <template slot-scope="scope">
             <el-popover
