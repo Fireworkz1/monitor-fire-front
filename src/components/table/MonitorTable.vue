@@ -30,6 +30,7 @@ export default {
         this.dialogVisible = false;
         this.local.row = null;
         this.$message('删除成功！');
+        window.location.reload();
       }catch (error){
         this.$message.error(error);
       }
@@ -69,7 +70,6 @@ export default {
     async fetchData(){
       try{
         this.monitorList=(await axios.post('/monitor/selectLike')).data;
-        console.log(this.monitorList)
         this.softwareResourceList=(await axios.post('/resource/selectSoftware')).data;
         this.hardwareResourceList=(await axios.post('/resource/selectServer')).data;
 

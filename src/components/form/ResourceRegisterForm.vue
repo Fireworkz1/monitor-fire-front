@@ -1,19 +1,80 @@
 <script>
+import axios from "@/axios";
+
+
 export default {
   methods:{
-    onSubmit(){
-      if(this.accessible){
-        this.dialogVisible = false;
-        this.accessible=false;
-        alert('已经启用默认监控，可在资源控制页查看详情');
-      }else{
-        alert('请先Ping通目标资源再添加');
+    async fetchData() {
+      try{
+        this.groupList = (await axios.get('/account/selectGroupInfo')).data;
+      }catch (error){
+        this.$message.error('获取分组失败，请重新打开表单');
       }
 
     },
-    testAccessible(){
-      alert('Pong');
-      this.accessible = true;
+    async onSubmit() {
+
+      if (this.accessible) {
+        try {
+          if (this.selectedType === 'server') {
+            await axios.post('/resource/addServer', {
+              resource:this.serverForm,
+              groupIdList:this.groupIdsform
+            })
+          } else {
+            await axios.post('/resource/addSoftware', {
+              resource:this.softwareForm,
+              groupIdList:this.groupIdsform
+            })
+          }
+          this.serverForm={
+            resourceType: 'server',
+            resourceName: '',
+            resourceIp:'',
+            resourceManageOn:0,
+            resourceDescription:'',
+            hardResourceUsername:'',
+            hardResourcePassword:'',
+          };
+          this.softwareForm={
+            resourceType: 'software',
+            resourceName: '',
+            resourceTypeSecond:'',
+            resourceIp:'',
+            ResourcePort:'',
+            resourceManageOn:0,
+            resourceDescription:'',
+            startMode:'',
+          };
+          this.groupIdsform=[];
+          this.dialogVisible = false;
+          this.accessible = false;
+          alert('已经默认启用资源，可在资源控制页查看详情');
+        } catch (error) {
+          this.$message.error(error);
+        }
+      } else {
+        alert('请先测试资源连通性！');
+      }
+
+    },
+    async testAccessible(){
+      try{
+        if(this.selectedType==='server'){
+          await axios.post('/resource/ping',this.serverForm);
+        }else if(this.selectedType==='software'){
+          await axios.post('/resource/testSoftware',this.softwareForm)
+        }else {
+          throw new Error('请选择资源类型！');
+        }
+        this.accessible = true;
+        this.$message.success('连接成功，可添加该资源');
+      }catch (error){
+        this.$message.error(error);
+      }
+
+
+
     },
   },
   data() {
@@ -40,8 +101,12 @@ export default {
         resourceManageOn:0,
         resourceDescription:'',
         startMode:'',
-      }
+      },
+      groupIdsform:[],
+      groupList:[]
     };
+  },mounted() {
+    this.fetchData();
   }
 };
 </script>
@@ -84,12 +149,27 @@ export default {
             <el-input v-model="serverForm.hardResourcePassword"></el-input>
           </el-form-item>
           <!-- 其他服务器相关字段 -->
+          <el-form-item label="所属分组">
+            <el-select v-model="groupIdsform" multiple>
+              <el-option
+                  v-for="item in groupList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
 
       <div v-if="selectedType === 'software'">
         <h3>软件表单</h3>
         <el-form label-width="120px">
+          <el-form-item label="二级类型">
+            <el-select v-model="softwareForm.resourceTypeSecond">
+              <el-option>docker</el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="资源名称">
             <el-input v-model="softwareForm.resourceName"></el-input>
           </el-form-item>
