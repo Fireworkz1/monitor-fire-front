@@ -12,6 +12,11 @@ export default {
             monitorId: this.monitorId
           }
         })).data;
+        this.metricDescription= (await axios.post('/monitor/metricDescription', null,{
+          params:{
+            target:this.monitor.monitorPresetTarget
+          }
+        })).data;
         this.resourceList=(await axios.post('/resource/selectBatch', this.monitor.monitorResourceIds)).data;
 
       }catch (error){
@@ -36,6 +41,7 @@ export default {
       },
       error:'',
       resourceList:[],
+      metricDescription:''
     }
   },
   mounted(){
@@ -51,11 +57,12 @@ export default {
 <template>
   <el-container>
     <el-header v-if="!detail">
-      {{monitor.monitorName}}
-
       <i :class="monitor.monitorDemonstration === 'graph' ? 'el-icon-picture-outline' :
            monitor.monitorDemonstration === 'table' ? 'el-icon-notebook-2' :
            'el-icon-question'"></i>
+      {{monitor.monitorName}}
+
+
     </el-header>
     <el-main >
       <div v-if="detail">
@@ -70,6 +77,7 @@ export default {
         </p>
         <p>{{ monitor.monitorIspreset===1?'监控指标: 预设指标':'监控指标: 非预设指标' }}</p>
         <p class="smallfont"> {{ monitor.monitorPresetTarget ||"Prom QL:"+ monitor.monitorNotpresetPromql }}</p>
+        <p class="smallfont">{{metricDescription}}</p>
       </div>
     </el-main>
   </el-container>

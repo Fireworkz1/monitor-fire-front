@@ -28,7 +28,6 @@ axiosInstance.interceptors.response.use(
         // 检查业务状态码
         if (response.data && response.data.code === 500) {
             // 抛出业务错误
-            // alert('111');
             throw new Error(response.data.msg);
         }
         return response.data; // 如果没有错误，返回响应

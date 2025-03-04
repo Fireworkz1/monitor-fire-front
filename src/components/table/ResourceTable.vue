@@ -195,11 +195,12 @@ export default {
       <el-table-column
           prop="resourceIp"
           label="IP"
-          width="150">
+          width="150"
+          v-if="editAllow">
       </el-table-column>
       <el-table-column
           label="Port"
-          v-if="resourceType!=='server'"
+          v-if="resourceType!=='server'&&editAllow"
           width="75">
         <template slot-scope="scope">
           {{ scope.row.resourcePort ||  '——' }}
@@ -207,7 +208,8 @@ export default {
       </el-table-column>
       <el-table-column
           label="二级类型"
-          v-if="resourceType!=='server'"
+          v-if="resourceType!=='server'&&editAllow"
+
           width="90">
         <template slot-scope="scope">
           {{ scope.row.resourceTypeSecond ||  '——' }}
@@ -220,7 +222,7 @@ export default {
       </el-table-column>
       <el-table-column
           label="启动模式"
-          v-if="resourceType!=='server'"
+          v-if="resourceType!=='server'&&editAllow"
           width="80"
           ><template slot-scope="scope">
           {{ scope.row.startMode ||  '——' }}
@@ -237,19 +239,22 @@ export default {
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="操作" v-if="editAllow">
+      <el-table-column label="操作" >
         <template slot-scope="scope">
           <el-button
               size="mini"
-              @click="seeDetails(scope.row)">查看详情</el-button>
+              @click="seeDetails(scope.row)"
+              v-if="editAllow">查看详情</el-button>
           <el-button
               size="mini"
               type="danger"
-              @click="local.row=scope.row;dialogVisible=true;">删除</el-button>
-          <el-button
-              size="mini"
-              :type="scope.row.resourceManageOn?'danger':'primary'"
-              @click="local.row=scope.row;statusDialogVisible=true">切换资源启用状态</el-button>
+              @click="local.row=scope.row;dialogVisible=true;"
+              v-if="!editAllow">删除</el-button>
+<!--          中期后打开-->
+<!--          <el-button-->
+<!--              size="mini"-->
+<!--              :type="scope.row.resourceManageOn?'danger':'primary'"-->
+<!--              @click="local.row=scope.row;statusDialogVisible=true">切换资源启用状态</el-button>-->
         </template>
       </el-table-column>
     </el-table>

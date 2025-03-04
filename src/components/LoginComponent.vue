@@ -42,20 +42,19 @@ export default {
     async handleLogin() {
       this.error = ''; // 清除之前的错误信息
       try {
-        // 模拟登录请求
-        const response = await axios.post('/account/login', {
+        const response = (await axios.post('/account/login', {
           account: this.account,
           password: this.password
-        });
-        console.log(response.data.token)
+        })).data;
+        console.log(response.token)
         // 登录成功，存储 Token
 
-        localStorage.setItem('token', response.data.token);
-        this.$message('登陆成功');
+        localStorage.setItem('token', response.token);
+        this.$message('登录成功');
         this.$router.push('/home'); // 跳转到主页
       } catch (error) {
         // 登录失败，显示错误信息
-        this.$message(error);
+        this.$message.error(error);
         this.error=error;
         this.password=''
       }

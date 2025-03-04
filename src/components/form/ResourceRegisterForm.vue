@@ -7,6 +7,7 @@ export default {
     async fetchData() {
       try{
         this.groupList = (await axios.get('/account/selectGroupInfo')).data;
+        console.log(this.groupList)
       }catch (error){
         this.$message.error('获取分组失败，请重新打开表单');
       }
@@ -49,12 +50,13 @@ export default {
           this.groupIdsform=[];
           this.dialogVisible = false;
           this.accessible = false;
-          alert('已经默认启用资源，可在资源控制页查看详情');
+          this.$message('资源添加成功，可在资源管理页启动资源管理');
+          window.location.reload();
         } catch (error) {
           this.$message.error(error);
         }
       } else {
-        alert('请先测试资源连通性！');
+        this.$message.error('请先测试资源连通性！');
       }
 
     },
@@ -137,25 +139,25 @@ export default {
             <el-input v-model="serverForm.resourceName"></el-input>
           </el-form-item>
           <el-form-item label="IP 地址">
-            <el-input v-model="serverForm.resourceIp"></el-input>
+            <el-input v-model="serverForm.resourceIp" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="资源描述">
             <el-input v-model="serverForm.resourceDescription"></el-input>
           </el-form-item>
           <el-form-item label="登录用户名">
-            <el-input v-model="serverForm.hardResourceUsername"></el-input>
+            <el-input v-model="serverForm.hardResourceUsername" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="登陆密码">
-            <el-input v-model="serverForm.hardResourcePassword"></el-input>
+            <el-input v-model="serverForm.hardResourcePassword" @change="accessible=false"></el-input>
           </el-form-item>
           <!-- 其他服务器相关字段 -->
           <el-form-item label="所属分组">
             <el-select v-model="groupIdsform" multiple>
               <el-option
                   v-for="item in groupList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
+                  :key="item.group.id"
+                  :label="item.group.name"
+                  :value="item.group.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -167,7 +169,7 @@ export default {
         <el-form label-width="120px">
           <el-form-item label="二级类型">
             <el-select v-model="softwareForm.resourceTypeSecond">
-              <el-option>docker</el-option>
+              <el-option>springboot</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="资源名称">
@@ -177,18 +179,30 @@ export default {
             <el-input v-model="softwareForm.resourceTypeSecond"></el-input>
           </el-form-item>
           <el-form-item label="IP 地址">
-            <el-input v-model="softwareForm.resourceIp"></el-input>
+            <el-input v-model="softwareForm.resourceIp" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="监控暴露端口">
-            <el-input v-model="softwareForm.ResourcePort"></el-input>
+            <el-input v-model="softwareForm.ResourcePort" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="资源描述">
             <el-input v-model="softwareForm.resourceDescription"></el-input>
           </el-form-item>
           <el-form-item label="启动方式">
-            <el-input v-model="softwareForm.startMode"></el-input>
+            <el-select v-model="softwareForm.startMode" @change="accessible=false">
+              <el-option>docker</el-option>
+            </el-select>
           </el-form-item>
           <!-- 其他软件相关字段 -->
+          <el-form-item label="所属分组">
+          <el-select v-model="groupIdsform" multiple>
+            <el-option
+                v-for="item in groupList"
+                :key="item.group.id"
+                :label="item.group.name"
+                :value="item.group.id">
+            </el-option>
+          </el-select>
+          </el-form-item>
         </el-form>
       </div>
 

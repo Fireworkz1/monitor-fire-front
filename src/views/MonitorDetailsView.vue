@@ -29,7 +29,6 @@ export default {
               str:this.searchstr
             }
           })).data;
-          console.log(this.items)
       }catch (error){
         this.items=[]
         this.$message.error(error);
@@ -37,9 +36,9 @@ export default {
     },
     jumpToDetail(item){
       if(item.monitorDemonstration==='graph'){
-        this.$message('jumptograph')
+        this.$router.push({ name: 'MonitorDataView', query: { monitorId: item.id }});
       }else if(item.monitorDemonstration==='table'){
-        this.$message('jumptotable')
+        this.$router.push({ name: 'MonitorDataView', query: { monitorId:item.id }});
       }else {
         this.$message.error('无法查看信息')
       }
@@ -89,6 +88,7 @@ export default {
                 <el-col :span="4">
                   <el-button type="primary" @click="searchData">搜索</el-button>
                   <el-button  @click="fetchData">重置</el-button>
+
                 </el-col>
               </el-row>
             </el-header>
