@@ -416,7 +416,7 @@ export default {
       };
 
       // 设置 ECharts 配置
-      this.chartInsatance.setOption(option);
+      this.chartInsatance.setOption(option,true);
     },
 
 
@@ -426,9 +426,9 @@ export default {
       this.filteredGraphData = this.computedGraphData.filter(item => {
         return this.filteredGraphDataMetricFields.includes(item.metricFields);
       });
-      this.chartInsatance.dispose();
-      this.chartInsatance = null;
-      this.initChart();
+      // this.chartInsatance.dispose();
+      // this.chartInsatance = null;
+      this.updateChart();
     },
   },
 
