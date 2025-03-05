@@ -59,9 +59,8 @@ export default {
         <i class="el-icon-document"></i>
         <span slot="title">数据洞察</span>
       </el-submenu>
-      <el-submenu index="4">
+      <el-submenu index="4" disabled>
         <template slot="title">
-          <i class="el-icon-location"></i>
           <span>监控告警</span>
         </template>
         <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>

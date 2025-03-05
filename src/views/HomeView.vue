@@ -11,7 +11,6 @@
         </el-main>
         <el-footer>
           <el-button type="success" plain @click="jumpToSys">点击进入系统</el-button>
-          <el-button type="info" plain @click="jumpToAbout">毕设项目介绍</el-button>
         </el-footer>
       </el-container>
     </el-container>

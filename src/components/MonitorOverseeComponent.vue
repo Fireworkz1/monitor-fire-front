@@ -12,11 +12,11 @@ export default {
             monitorId: this.monitorId
           }
         })).data;
-        this.metricDescription= (await axios.post('/monitor/metricDescription', null,{
-          params:{
-            target:this.monitor.monitorPresetTarget
-          }
-        })).data;
+        // this.metricDescription= (await axios.post('/monitor/metricDescription', null,{
+        //   params:{
+        //     target:this.monitor.monitorPresetTarget
+        //   }
+        // })).data;
         this.resourceList=(await axios.post('/resource/selectBatch', this.monitor.monitorResourceIds)).data;
 
       }catch (error){
@@ -56,15 +56,12 @@ export default {
 
 <template>
   <el-container>
-    <el-header v-if="!detail">
+
+    <el-main >
       <i :class="monitor.monitorDemonstration === 'graph' ? 'el-icon-picture-outline' :
            monitor.monitorDemonstration === 'table' ? 'el-icon-notebook-2' :
            'el-icon-question'"></i>
       {{monitor.monitorName}}
-
-
-    </el-header>
-    <el-main >
       <div v-if="detail">
         <p>监控id:&nbsp;{{monitor.id}}&nbsp;&nbsp;监控类型:&nbsp;{{ monitor.monitorType }}</p>
 

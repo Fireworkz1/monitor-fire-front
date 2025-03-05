@@ -118,7 +118,12 @@ export default {
                         trigger="hover"
                         >
                       <monitor-oversee-component :key="item.id" :monitor-id="item.id" :detail="true"></monitor-oversee-component>
-                      <monitor-oversee-component :key="item.id" slot="reference"  :monitor-id="item.id"></monitor-oversee-component>
+                      <div slot="reference">
+                        <i :class="item.monitorDemonstration === 'graph' ? 'el-icon-picture-outline' :
+           item.monitorDemonstration === 'table' ? 'el-icon-notebook-2' :
+           'el-icon-question'"></i>
+                        {{item.monitorName}}
+                      </div>
                     </el-popover>
 
                   </div>

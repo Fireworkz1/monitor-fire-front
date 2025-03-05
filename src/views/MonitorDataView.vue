@@ -426,6 +426,7 @@ export default {
       this.filteredGraphData = this.computedGraphData.filter(item => {
         return this.filteredGraphDataMetricFields.includes(item.metricFields);
       });
+      console.log(this.filteredGraphData)
       // this.chartInsatance.dispose();
       // this.chartInsatance = null;
       this.updateChart();
