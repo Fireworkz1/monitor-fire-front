@@ -27,7 +27,7 @@ export default {
 <template>
 
   <div>
-    <h5 @click="goToPage('/home')">回到主页</h5>
+    <h5 @click="goToPage('/home')" style="height: 47px">回到主页</h5>
     <el-menu
         default-active="2"
         class="el-menu-vertical-demo"

@@ -18,4 +18,12 @@ body {
   padding: 0;
   font-size: 20px;
 }
+.el-header{
+  height: 105px !important;
+  padding: 0px !important;
+}
+main, div {
+  margin: 0;
+  padding: 0;
+}
 </style>
