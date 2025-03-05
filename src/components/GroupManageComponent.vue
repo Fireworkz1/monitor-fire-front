@@ -1,7 +1,8 @@
 <template>
   <div>
     <!-- 创建分组按钮 -->
-    <el-button type="primary" @click="openCreateGroupDialog">创建新分组</el-button>
+    <page-label label="当前全部分组"></page-label>
+    <el-button type="primary" @click="openCreateGroupDialog" class="registerButton">创建新分组</el-button>
 
     <!-- 分组列表 -->
     <el-table :data="groupList" style="width: 100%">
@@ -81,8 +82,10 @@
 
 <script>
 import axios from "@/axios";
+import PageLabel from "@/components/title/PageLabel.vue";
 
 export default {
+  components: {PageLabel},
   data() {
     return {
       local:{
@@ -262,4 +265,12 @@ export default {
 </script>
 
 <style scoped>
+.registerButton{
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: flex-start;
+  margin-left: 5px;
+  margin-bottom: 15px;
+
+}
 </style>

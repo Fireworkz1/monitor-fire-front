@@ -104,7 +104,7 @@ export default {
 <template>
   <div>
 
-    <el-button type="primary" @click="dialogVisible = true">添加监控</el-button>
+    <el-button type="primary" @click="dialogVisible = true" class="registerButton">添加监控</el-button>
     <el-dialog
         title="添加监控"
         :visible.sync="dialogVisible"
@@ -184,5 +184,12 @@ export default {
 </template>
 
 <style scoped>
+.registerButton{
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: flex-start;
+  margin-left: 5px;
+  margin-bottom: 15px;
 
+}
 </style>

@@ -3,10 +3,12 @@ import HelloWorld from "@/components/title/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 import MonitorRegisterForm from "@/components/form/MonitorRegisterForm.vue";
 import MonitorTable from "@/components/table/MonitorTable.vue";
+import PageLabel from "@/components/title/PageLabel.vue";
 
 export default {
   name: 'MonitorManageView',
   components: {
+    PageLabel,
     MonitorRegisterForm,
     HelloWorld,
     NavigatorComponent,
@@ -26,7 +28,9 @@ export default {
           <HelloWorld msg="监控管理页" />
         </el-header>
         <el-main>
+          <page-label label="监控添加"></page-label>
           <monitor-register-form></monitor-register-form>
+          <page-label label="监控管理"></page-label>
           <monitor-table></monitor-table>
         </el-main>
       </el-container>

@@ -22,10 +22,64 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit" @click="handleLogin">登录</el-button>
+        <el-button @click="dialogVisible=true">注册</el-button>
       </el-form-item>
 <!--      <p v-if="error" class="error">{{ error }}</p>-->
     </el-form>
+    <el-dialog
+        title="用户注册"
+        :visible.sync="dialogVisible"
+        width="50%"
+        :before-close="handleClose">
+
+      <!-- 注册表单 -->
+      <el-form
+          :model="registerForm"
+          :rules="rules"
+          ref="registerForm"
+          label-width="120px"
+          class="register-form">
+
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="registerForm.name" placeholder="请输入姓名"></el-input>
+        </el-form-item>
+
+        <el-form-item label="手机号" prop="tel">
+          <el-input v-model="registerForm.tel" placeholder="请输入手机号"></el-input>
+        </el-form-item>
+
+        <el-form-item label="账号" prop="account">
+          <el-input v-model="registerForm.account" placeholder="请输入账号"></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码" prop="password">
+          <el-input
+              v-model="registerForm.password"
+              type="password"
+              placeholder="请输入密码"
+              show-password></el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="registerForm.email" placeholder="请输入邮箱"></el-input>
+        </el-form-item>
+
+        <el-form-item label="权限等级" prop="permissionLevel">
+          <el-select v-model="registerForm.permissionLevel" placeholder="请选择权限等级">
+            <el-option label="普通用户" :value="2"></el-option>
+            <el-option label="管理员" :value="4" disabled></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="submitForm">注册</el-button>
+          <el-button @click="resetForm">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
+
+
 </template>
 
 <script>
@@ -33,12 +87,65 @@ import axios from '@/axios';
 export default {
   data() {
     return {
+      dialogVisible:false,
       account: '',
       password: '',
-      error: ''
+      error: '',
+      registerForm: {
+        name: "",
+        tel: "",
+        account: "",
+        password: "",
+        email: "",
+        permissionLevel: null
+      },
+      rules: {
+        name: [
+          { required: true, message: "请输入姓名", trigger: "blur" }
+        ],
+        tel: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          { pattern: /^1[3-9]\d{9}$/, message: "请输入有效的手机号", trigger: "blur" }
+        ],
+        account: [
+          { required: true, message: "请输入账号", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码长度不能少于6位", trigger: "blur" }
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { type: "email", message: "请输入有效的邮箱地址", trigger: "blur" }
+        ],
+        permissionLevel: [
+          { required: true, message: "请选择权限等级", trigger: "change" }
+        ]
+      }
     };
   },
   methods: {
+    submitForm() {
+      try{
+        this.$refs.registerForm.validate(async (valid) => {
+          if (valid) {
+            await axios.post('/account/register',this.registerForm);
+            this.dialogVisible=false;
+            this.$message('注册成功');
+          } else {
+            // 表单验证失败，提示用户
+            this.$message.error("表单填写有误，请检查！");
+          }
+        });
+      }catch (error) {
+        this.$message.error(error);
+      }
+
+
+    },
+    resetForm() {
+      this.$refs.registerForm.resetFields();
+    },
     async handleLogin() {
       this.error = ''; // 清除之前的错误信息
       try {
@@ -58,6 +165,16 @@ export default {
         this.error=error;
         this.password=''
       }
+    },handleClose(){
+      this.registerForm={
+          name: "",
+          tel: "",
+          account: "",
+          password: "",
+          email: "",
+          permissionLevel: null
+        }
+      this.dialogVisible=false;
     }
   }
 };

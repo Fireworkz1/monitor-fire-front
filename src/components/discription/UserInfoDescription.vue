@@ -1,7 +1,9 @@
 <script>
 import axios from "@/axios";
+import PageLabel from "@/components/title/PageLabel.vue";
 
 export default {
+  components: {PageLabel},
 
   data(){
     return{
@@ -134,6 +136,7 @@ export default {
 
 <template>
 <div>
+  <page-label label="用户信息"></page-label>
   <el-descriptions class="margin-top" title="当前登录用户信息" :column="1"  border>
     <template slot="extra">
       <el-button type="primary" size="small" @click="onChangeVisibility=true">修改用户信息</el-button>

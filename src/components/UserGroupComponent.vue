@@ -77,7 +77,6 @@ export default {
 
 <template>
   <div>
-    <h3>当前用户所在的分组</h3>
     <el-table :data="userGroups" style="width: 100%">
       <el-table-column prop="id" label="分组ID" width="100"></el-table-column>
       <el-table-column prop="name" label="分组名称" width="150"></el-table-column>

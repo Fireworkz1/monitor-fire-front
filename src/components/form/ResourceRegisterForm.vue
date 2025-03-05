@@ -99,7 +99,7 @@ export default {
         resourceName: '',
         resourceTypeSecond:'',
         resourceIp:'',
-        ResourcePort:'',
+        resourcePort:'',
         resourceManageOn:0,
         resourceDescription:'',
         startMode:'',
@@ -116,7 +116,7 @@ export default {
 <template>
   <div>
 
-    <el-button type="primary" @click="dialogVisible = true">注册资源</el-button>
+    <el-button type="primary" @click="dialogVisible = true" class="registerButton">注册资源</el-button>
     <el-dialog
         title="注册资源"
         :visible.sync="dialogVisible"
@@ -169,7 +169,7 @@ export default {
         <el-form label-width="120px">
           <el-form-item label="二级类型">
             <el-select v-model="softwareForm.resourceTypeSecond">
-              <el-option>springboot</el-option>
+              <el-option label="springboot" value="springboot"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="资源名称">
@@ -182,14 +182,14 @@ export default {
             <el-input v-model="softwareForm.resourceIp" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="监控暴露端口">
-            <el-input v-model="softwareForm.ResourcePort" @change="accessible=false"></el-input>
+            <el-input v-model="softwareForm.resourcePort" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="资源描述">
             <el-input v-model="softwareForm.resourceDescription"></el-input>
           </el-form-item>
           <el-form-item label="启动方式">
             <el-select v-model="softwareForm.startMode" @change="accessible=false">
-              <el-option>docker</el-option>
+              <el-option label="docker" value="docker"></el-option>
             </el-select>
           </el-form-item>
           <!-- 其他软件相关字段 -->
@@ -218,5 +218,11 @@ export default {
 </template>
 
 <style scoped>
-
+.registerButton{
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: flex-start;
+  margin-left: 5px;
+  margin-bottom: 15px;
+}
 </style>

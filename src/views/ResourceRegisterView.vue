@@ -29,9 +29,10 @@ export default {
           <HelloWorld msg="资源注册页" />
         </el-header>
         <el-main>
+          <page-label label="资源注册"></page-label>
           <resource-register-form></resource-register-form>
           <template>
-            <el-row gutter="20">
+            <el-row :gutter=20>
               <el-col :span="11">
                 <page-label label="服务器资源"></page-label>
                 <resource-table resource-type="server"></resource-table>

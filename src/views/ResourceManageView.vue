@@ -2,10 +2,12 @@
 import HelloWorld from "@/components/title/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 import ResourceTable from "@/components/table/ResourceTable.vue";
+import PageLabel from "@/components/title/PageLabel.vue";
 
 export default {
   name: 'ResourceManageView',
   components: {
+    PageLabel,
     HelloWorld,
     NavigatorComponent,
     ResourceTable,
@@ -24,6 +26,7 @@ export default {
           <HelloWorld msg="资源管理页" />
         </el-header>
         <el-main>
+          <page-label label="资源管理"></page-label>
           <resource-table edit-allow=true></resource-table>
         </el-main>
       </el-container>
