@@ -258,7 +258,7 @@ export default {
         </el-form>
       </div>
 
-      <div v-if="selectedType === 'mysql'">
+      <div v-if="selectedType === 'redis'">
         <h3>高速缓存表单</h3>
         <el-form label-width="120px">
           <el-form-item label="二级类型">
