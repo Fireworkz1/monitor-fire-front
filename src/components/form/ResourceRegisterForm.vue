@@ -18,27 +18,29 @@ export default {
       if (this.accessible) {
         try {
           if (this.selectedType === 'server') {
+            this.serverForm.resourceType=this.selectedType;
             await axios.post('/resource/addServer', {
               resource:this.serverForm,
               groupIdList:this.groupIdsform
             })
           } else {
+            this.softwareForm.resourceType=this.selectedType;
             await axios.post('/resource/addSoftware', {
               resource:this.softwareForm,
               groupIdList:this.groupIdsform
             })
           }
           this.serverForm={
-            resourceType: 'server',
+            resourceType: '',
             resourceName: '',
             resourceIp:'',
             resourceManageOn:0,
             resourceDescription:'',
-            hardResourceUsername:'',
-            hardResourcePassword:'',
+            resourceUsername:'',
+            resourcePassword:'',
           };
           this.softwareForm={
-            resourceType: 'software',
+            resourceType: '',
             resourceName: '',
             resourceTypeSecond:'',
             resourceIp:'',
@@ -47,6 +49,7 @@ export default {
             resourceDescription:'',
             startMode:'',
           };
+          this.selectedType='';
           this.groupIdsform=[];
           this.dialogVisible = false;
           this.accessible = false;
@@ -85,17 +88,17 @@ export default {
       selectedType: '', // 选择器的绑定值
       accessible:false,
       serverForm: { // 服务器表单数据
-        resourceType: 'server',
+        resourceType: '',
         resourceName: '',
         resourceIp:'',
         resourceManageOn:0,
         resourceDescription:'',
-        hardResourceUsername:'',
-        hardResourcePassword:'',
+        resourceUsername:'',
+        resourcePassword:'',
 
       },
       softwareForm: { // 软件表单数据
-        resourceType: 'software',
+        resourceType: '',
         resourceName: '',
         resourceTypeSecond:'',
         resourceIp:'',
@@ -103,6 +106,7 @@ export default {
         resourceManageOn:0,
         resourceDescription:'',
         startMode:'',
+        reservedParam2:''
       },
       groupIdsform:[],
       groupList:[]
@@ -126,7 +130,9 @@ export default {
         <el-form-item label="选择类型">
           <el-select v-model="selectedType" placeholder="请选择">
             <el-option label="服务器资源" value="server"></el-option>
-            <el-option label="软件资源" value="software"></el-option>
+            <el-option label="微服务资源" value="software"></el-option>
+            <el-option label=数据库资源" value="mysql"></el-option>
+            <el-option label="高速缓存资源" value="redis"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -189,6 +195,7 @@ export default {
           </el-form-item>
           <el-form-item label="启动方式">
             <el-select v-model="softwareForm.startMode" @change="accessible=false">
+              <el-option label="直接启动" value="direct"></el-option>
               <el-option label="docker" value="docker"></el-option>
             </el-select>
           </el-form-item>
@@ -205,7 +212,97 @@ export default {
           </el-form-item>
         </el-form>
       </div>
+      <div v-if="selectedType === 'mysql'">
+        <h3>数据库表单</h3>
+        <el-form label-width="120px">
+          <el-form-item label="二级类型">
+            <el-select v-model="softwareForm.resourceTypeSecond">
+              <el-option label="mysql" value="mysql"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="资源名称">
+            <el-input v-model="softwareForm.resourceName"></el-input>
+          </el-form-item>
+          <el-form-item label="软件种类">
+            <el-input v-model="softwareForm.resourceTypeSecond"></el-input>
+          </el-form-item>
+          <el-form-item label="IP 地址">
+            <el-input v-model="softwareForm.resourceIp" @change="accessible=false"></el-input>
+          </el-form-item>
+          <el-form-item label="资源端口">
+            <el-input v-model="softwareForm.reservedParam2" @change="accessible=false" ></el-input>
+          </el-form-item>
+          <el-form-item label="监控暴露端口">
+            <el-input v-model="softwareForm.resourcePort" disabled placeholder="9104" ></el-input>
+          </el-form-item>
+          <el-form-item label="资源描述">
+            <el-input v-model="softwareForm.resourceDescription"></el-input>
+          </el-form-item>
+          <el-form-item label="启动方式">
+            <el-select v-model="softwareForm.startMode" @change="accessible=false">
+              <el-option label="直接启动" value="direct"></el-option>
+              <el-option label="docker" value="docker"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 其他软件相关字段 -->
+          <el-form-item label="所属分组">
+            <el-select v-model="groupIdsform" multiple>
+              <el-option
+                  v-for="item in groupList"
+                  :key="item.group.id"
+                  :label="item.group.name"
+                  :value="item.group.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
 
+      <div v-if="selectedType === 'mysql'">
+        <h3>高速缓存表单</h3>
+        <el-form label-width="120px">
+          <el-form-item label="二级类型">
+            <el-select v-model="softwareForm.resourceTypeSecond">
+              <el-option label="redis" value="redis"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="资源名称">
+            <el-input v-model="softwareForm.resourceName"></el-input>
+          </el-form-item>
+          <el-form-item label="软件种类">
+            <el-input v-model="softwareForm.resourceTypeSecond"></el-input>
+          </el-form-item>
+          <el-form-item label="IP 地址">
+            <el-input v-model="softwareForm.resourceIp" @change="accessible=false"></el-input>
+          </el-form-item>
+          <el-form-item label="资源端口">
+            <el-input v-model="softwareForm.reservedParam2" @change="accessible=false" ></el-input>
+          </el-form-item>
+          <el-form-item label="监控暴露端口">
+            <el-input v-model="softwareForm.resourcePort" disabled placeholder="9121" ></el-input>
+          </el-form-item>
+          <el-form-item label="资源描述">
+            <el-input v-model="softwareForm.resourceDescription"></el-input>
+          </el-form-item>
+          <el-form-item label="启动方式">
+            <el-select v-model="softwareForm.startMode" @change="accessible=false">
+              <el-option label="直接启动" value="direct"></el-option>
+              <el-option label="docker" value="docker"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 其他软件相关字段 -->
+          <el-form-item label="所属分组">
+            <el-select v-model="groupIdsform" multiple>
+              <el-option
+                  v-for="item in groupList"
+                  :key="item.group.id"
+                  :label="item.group.name"
+                  :value="item.group.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="testAccessible">Ping</el-button>
     <el-button @click="dialogVisible = false">取 消</el-button>

@@ -133,9 +133,11 @@ export default {
   },
   computed: {
     currentResourceList() {
-      return this.updateForm.monitorType === 'software'
-          ? this.softwareResourceList
-          : this.hardwareResourceList;
+      return this.updateForm.monitorType === 'server'
+          ? this.hardwareResourceList
+          : this.softwareResourceList.filter(item=>{
+            return item.resourceType === this.updateForm.monitorType;
+          })
     },
   }
 };
@@ -222,7 +224,7 @@ export default {
             <el-option
                 v-for="item in currentResourceList"
                 :key="item.id"
-                :label="updateForm.monitorType === 'server' ? `${item.resourceName} ${item.resourceIp}` : `${item.resourceName} ${item.resourceIp}:${item.resourcePort}`"
+                :label="updateForm.monitorType === 'server' ? `${item.resourceName} ${item.resourceType} ${item.resourceIp}` : `${item.resourceName} ${item.resourceType} ${item.resourceIp}:${item.resourcePort}`"
                 :value="item.id">
             </el-option>
           </el-select>

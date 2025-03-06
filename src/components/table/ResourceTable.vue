@@ -19,7 +19,7 @@ export default {
               id: row.id
             }
           });
-        } else if (row.resourceType === "software") {
+        } else if (row.resourceType === "software"||row.resourceType==='mysql'||row.resourceType==='redis') {
           await axios.post('/resource/deleteSoftware', null, {
             params: {
               id: row.id
@@ -72,11 +72,13 @@ export default {
       if(this.resourceType==='server'){
         url='/resource/selectServer';
         this.tableData=(await axios.post(url)).data;
-        console.log(this.tableData)
-      }else if(this.resourceType==='software'){
+      }else if(this.resourceType==='software'||this.resourceType==='mysql'||this.resourceType==='redis'){
         url='/resource/selectSoftware';
-        this.tableData=(await axios.post(url)).data;
-        console.log(this.tableData)
+        this.tableData=(await axios.post(url,null,{
+          params:{
+            type:this.resourceType
+          }
+        })).data;
       }else{
         this.tableData1=(await axios.post('/resource/selectSoftware')).data;
         this.tableData=(await axios.post('/resource/selectServer')).data;
@@ -200,7 +202,7 @@ export default {
       </el-table-column>
       <el-table-column
           label="Port"
-          v-if="resourceType!=='server'&&editAllow"
+          v-if="resourceType==='software'&&editAllow"
           width="75">
         <template slot-scope="scope">
           {{ scope.row.resourcePort ||  '——' }}
@@ -208,7 +210,7 @@ export default {
       </el-table-column>
       <el-table-column
           label="二级类型"
-          v-if="resourceType!=='server'&&editAllow"
+          v-if="resourceType==='server'&&editAllow"
 
           width="90">
         <template slot-scope="scope">

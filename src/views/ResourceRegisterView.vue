@@ -39,8 +39,19 @@ export default {
               </el-col>
 
               <el-col :span="12">
-                <page-label label="软件资源"></page-label>
+                <page-label label="Spring Cloud 微服务资源"></page-label>
                 <resource-table resource-type="software"></resource-table>
+              </el-col>
+            </el-row>
+            <el-row :gutter=20>
+              <el-col :span="11">
+                <page-label label="数据库资源"></page-label>
+                <resource-table resource-type="mysql"></resource-table>
+              </el-col>
+
+              <el-col :span="12">
+                <page-label label="高速缓存资源"></page-label>
+                <resource-table resource-type="redis"></resource-table>
               </el-col>
             </el-row>
           </template>
