@@ -131,7 +131,7 @@ export default {
           <el-select v-model="selectedType" placeholder="请选择">
             <el-option label="服务器资源" value="server"></el-option>
             <el-option label="微服务资源" value="software"></el-option>
-            <el-option label=数据库资源" value="mysql"></el-option>
+            <el-option label="数据库资源" value="mysql"></el-option>
             <el-option label="高速缓存资源" value="redis"></el-option>
           </el-select>
         </el-form-item>
