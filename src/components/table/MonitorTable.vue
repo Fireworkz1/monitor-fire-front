@@ -224,7 +224,7 @@ export default {
             <el-option
                 v-for="item in currentResourceList"
                 :key="item.id"
-                :label="updateForm.monitorType === 'server' ? `${item.resourceName} ${item.resourceType} ${item.resourceIp}` : `${item.resourceName} ${item.resourceType} ${item.resourceIp}:${item.resourcePort}`"
+                :label="updateForm.monitorType === 'server' ? `${item.resourceName} ${item.resourceType} ${item.resourceIp}` : (updateForm.monitorType === 'software' ?`${item.resourceName} ${item.resourceType} ${item.resourceIp}:${item.resourcePort}`:`${item.resourceName} ${item.resourceType} ${item.resourceIp}:${item.reservedParam2}`)"
                 :value="item.id">
             </el-option>
           </el-select>

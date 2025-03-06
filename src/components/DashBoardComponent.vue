@@ -14,7 +14,12 @@ export default {
         this.serverNum=response.data.serverNum;
         this.microserviceNum=response.data.softwareNum;
         this.userNum=response.data.userNum;
-        this.warningNum=response.data.warnNum;
+        this.warningRuleNum=response.data.warnNum;
+        this.dbNum=response.data.dbNum;
+        this.cacheNum=response.data.cacheNum;
+        this.totalWarningNum=65;
+        this.hisWarningNum=45;
+        //todo:这里修改为实际数量
       } catch (error) {
         // 登录失败，显示错误信息
         this.$message(error.message);
@@ -29,7 +34,11 @@ export default {
       serverNum: null,
       microserviceNum: null,
       userNum:null,
-      warningNum:null,
+      warningRuleNum:null,
+      hisWarningNum:null,
+      totalWarningNum:null,
+      dbNum:null,
+      cacheNum:null,
 
       error: ''
     };
@@ -40,12 +49,22 @@ export default {
 </script>
 
 <template>
-  <el-row :gutter="35" style="margin-top: 60px">
-    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控服务器数：<br><br>     {{serverNum}}</h4></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控微服务数：<br><br>     {{microserviceNum}}</h4></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>系统注册人数：<br><br>     {{userNum}}</h4></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>告警规则条数：<br><br>     {{warningNum}}</h4></div></el-col>
+  <div>
+    <el-row :gutter="35" style="margin-top: 30px">
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控服务器数<br><br>     <h2>{{serverNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控微服务数<br><br>     <h2>{{microserviceNum}}</h2></h4></div></el-col>
+    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控数据库数<br><br>     <h2>{{dbNum}}</h2></h4></div></el-col>
+    <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>监控缓存数量<br><br>     <h2>{{cacheNum}}</h2></h4></div></el-col>
   </el-row>
+    <el-row :gutter="35" style="margin-top: 60px">
+
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>系统注册人数<br><br>     <h2>{{userNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>告警规则条数<br><br>     <h2>{{warningRuleNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>总计告警次数<br><br>     <h2>{{totalWarningNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>处理告警数量<br><br>     <h2>{{hisWarningNum}}</h2></h4></div></el-col>
+    </el-row>
+  </div>
+
 </template>
 
 <style scoped>

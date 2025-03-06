@@ -44,7 +44,6 @@ export default {
 <!--        <el-menu-item index="1-1">资源总览</el-menu-item>-->
         <el-menu-item index="1-1" @click="goToPage('/form/register')">资源配置</el-menu-item>
         <el-menu-item index="1-2" @click="goToPage('/form/manage')">资源管理</el-menu-item>
-        <el-menu-item index="1-3" @click="goToPage('/form/auto')" disabled>自动化配置</el-menu-item>
 
       </el-submenu>
       <el-submenu index="2">
@@ -55,29 +54,34 @@ export default {
         <el-menu-item index="2-1" @click="goToPage('/monitor/manage')">监控管理</el-menu-item>
         <el-menu-item index="2-2" @click="goToPage('/monitor/details')">监控详情</el-menu-item>
       </el-submenu>
+
       <el-submenu index="3" disabled>
         <i class="el-icon-document"></i>
         <span slot="title">数据洞察</span>
       </el-submenu>
-      <el-submenu index="4" disabled>
+      <el-submenu index="4" >
         <template slot="title">
           <span>监控告警</span>
         </template>
         <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
         <el-menu-item index="4-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
-        <el-menu-item index="4-2" @click="goToPage('/warn/search')" disabled>我的告警</el-menu-item>
+<!--        <el-menu-item index="4-2" @click="goToPage('/warn/search')" disabled>我的告警</el-menu-item>-->
       </el-submenu>
-      <el-submenu index="5">
+      <el-submenu index="5" disabled>
+        <i class="el-icon-document"></i>
+        <span slot="title">自动化配置</span>
+      </el-submenu>
+      <el-submenu index="6">
         <template>
           <span slot="title"><i class="el-icon-setting"></i>用户管理</span>
         </template>
-        <el-submenu index="5-1">
+        <el-submenu index="6-1">
           <template slot="title">权限管理</template>
-          <el-menu-item index="5-1-1" @click="goToPage('/permission/group')">用户分组</el-menu-item>
-          <el-menu-item index="5-1-2" @click="goToPage('/permission/level')" disabled>权限分级</el-menu-item>
+          <el-menu-item index="6-1-1" @click="goToPage('/permission/group')">用户分组</el-menu-item>
+          <el-menu-item index="6-1-2" @click="goToPage('/permission/level')" disabled>权限分级</el-menu-item>
         </el-submenu>
-        <el-menu-item index="5-2" @click="goToPage('/permission/user')">登录信息管理</el-menu-item>
-        <el-menu-item index="5-3" @click="logoff">注销</el-menu-item>
+        <el-menu-item index="6-2" @click="goToPage('/permission/user')">登录信息管理</el-menu-item>
+        <el-menu-item index="6-3" @click="logoff">注销</el-menu-item>
 
       </el-submenu>
     </el-menu>

@@ -379,7 +379,7 @@ export default {
             <el-input
                 v-model="updateForm.warnName"
                 placeholder="请输入告警策略名称"
-                :maxlength="10"
+                :maxlength="20"
                 show-word-limit
             ></el-input>
           </el-form-item>

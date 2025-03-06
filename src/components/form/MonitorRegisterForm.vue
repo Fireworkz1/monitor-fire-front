@@ -114,7 +114,9 @@ export default {
         <el-form-item label="选择类型">
           <el-radio-group v-model="selectedType">
             <el-radio label="server">服务器监控</el-radio>
-            <el-radio label="software">软件监控</el-radio>
+            <el-radio label="software">微服务监控</el-radio>
+            <el-radio label="mysql">数据库监控</el-radio>
+            <el-radio label="redis">高速缓存监控</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="指标类型">

@@ -66,8 +66,10 @@ export default {
     async testAccessible(){
       try{
         if(this.selectedType==='server'){
+          this.serverForm.resourceType=this.selectedType;
           await axios.post('/resource/ping',this.serverForm);
-        }else if(this.selectedType==='software'){
+        }else if(this.selectedType==='software'||this.selectedType==='mysql'||this.selectedType==='redis'){
+          this.softwareForm.resourceType=this.selectedType;
           await axios.post('/resource/testSoftware',this.softwareForm)
         }else {
           throw new Error('请选择资源类型！');
@@ -75,7 +77,7 @@ export default {
         this.accessible = true;
         this.$message.success('连接成功，可添加该资源');
       }catch (error){
-        this.$message.error(error);
+        this.$message.error('连接失败。请检查配置');
       }
 
 
@@ -106,6 +108,8 @@ export default {
         resourceManageOn:0,
         resourceDescription:'',
         startMode:'',
+        resourceUsername:'',
+        resourcePassword:'',
         reservedParam2:''
       },
       groupIdsform:[],
@@ -128,7 +132,7 @@ export default {
 
       <el-form label-width="100px">
         <el-form-item label="选择类型">
-          <el-select v-model="selectedType" placeholder="请选择">
+          <el-select v-model="selectedType" @change="softwareForm.resourceTypeSecond=''" placeholder="请选择">
             <el-option label="服务器资源" value="server"></el-option>
             <el-option label="微服务资源" value="software"></el-option>
             <el-option label="数据库资源" value="mysql"></el-option>
@@ -151,10 +155,10 @@ export default {
             <el-input v-model="serverForm.resourceDescription"></el-input>
           </el-form-item>
           <el-form-item label="登录用户名">
-            <el-input v-model="serverForm.hardResourceUsername" @change="accessible=false"></el-input>
+            <el-input v-model="serverForm.resourceUsername" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="登陆密码">
-            <el-input v-model="serverForm.hardResourcePassword" @change="accessible=false"></el-input>
+            <el-input v-model="serverForm.resourcePassword" @change="accessible=false"></el-input>
           </el-form-item>
           <!-- 其他服务器相关字段 -->
           <el-form-item label="所属分组">
@@ -195,7 +199,8 @@ export default {
           </el-form-item>
           <el-form-item label="启动方式">
             <el-select v-model="softwareForm.startMode" @change="accessible=false">
-              <el-option label="直接启动" value="direct"></el-option>
+              <el-option label="手动启动" value="direct"></el-option>
+              <el-option label="系统命令启动" value="systemd"></el-option>
               <el-option label="docker" value="docker"></el-option>
             </el-select>
           </el-form-item>
@@ -234,6 +239,12 @@ export default {
           </el-form-item>
           <el-form-item label="监控暴露端口">
             <el-input v-model="softwareForm.resourcePort" disabled placeholder="9104" ></el-input>
+          </el-form-item>
+          <el-form-item label="登录用户名">
+            <el-input v-model="softwareForm.resourceUsername" @change="accessible=false"></el-input>
+          </el-form-item>
+          <el-form-item label="登录密码">
+            <el-input v-model="softwareForm.resourcePassword" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="资源描述">
             <el-input v-model="softwareForm.resourceDescription"></el-input>
@@ -280,6 +291,9 @@ export default {
           </el-form-item>
           <el-form-item label="监控暴露端口">
             <el-input v-model="softwareForm.resourcePort" disabled placeholder="9121" ></el-input>
+          </el-form-item>
+          <el-form-item label="登录密码">
+            <el-input v-model="softwareForm.resourcePassword" @change="accessible=false"></el-input>
           </el-form-item>
           <el-form-item label="资源描述">
             <el-input v-model="softwareForm.resourceDescription"></el-input>

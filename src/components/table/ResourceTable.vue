@@ -49,7 +49,11 @@ export default {
           case 'server':
             return "服务器";
           case 'software':
-            return "软件资源";
+            return "微服务资源";
+          case 'mysql':
+            return "数据库资源";
+          case 'redis':
+            return "高速缓存资源";
           default:
             return "未知";
 
@@ -252,11 +256,10 @@ export default {
               type="danger"
               @click="local.row=scope.row;dialogVisible=true;"
               v-if="!editAllow">删除</el-button>
-<!--          中期后打开-->
-<!--          <el-button-->
-<!--              size="mini"-->
-<!--              :type="scope.row.resourceManageOn?'danger':'primary'"-->
-<!--              @click="local.row=scope.row;statusDialogVisible=true">切换资源启用状态</el-button>-->
+          <el-button
+              size="mini"
+              :type="scope.row.resourceManageOn?'danger':'primary'"
+              @click="local.row=scope.row;statusDialogVisible=true">{{ scope.row.resourceManageOn?'禁用':'启用' }}</el-button>
         </template>
       </el-table-column>
     </el-table>
