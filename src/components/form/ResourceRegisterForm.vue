@@ -7,7 +7,6 @@ export default {
     async fetchData() {
       try{
         this.groupList = (await axios.get('/account/selectGroupInfo')).data;
-        console.log(this.groupList)
       }catch (error){
         this.$message.error('获取分组失败，请重新打开表单');
       }

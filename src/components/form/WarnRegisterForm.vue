@@ -5,7 +5,7 @@ export default {
   methods:{
     async submitForm() {
       try {
-        await axios.post('/warn/create',this.warnForm);
+        await axios.post('/warn/createPolicy',this.warnForm);
         this.dialogVisible = false;
         this.$message("添加成功!");
         window.location.reload();
@@ -27,7 +27,7 @@ export default {
     },
     async fetchData() {
       try {
-        this.userList=(await axios.get('/account/selectUser')).data;
+        this.groupList=(await axios.get('/account/selectGroupInfo')).data;
         this.monitorList = (await axios.post('/monitor/selectLike')).data;
       } catch (error) {
         this.$message.error(error);
@@ -50,10 +50,10 @@ export default {
       warnDescription: "",
       monitorId: null,
       monitorName: "",
-      noticeUserIds: []
+      noticeGroupIds: []
     },
       monitorList:[],
-      userList:[],
+      groupList:[],
     }
   }
 }
@@ -74,10 +74,11 @@ export default {
 
           <el-form-item label="警告级别">
             <el-select v-model="warnForm.warnLevel" placeholder="请选择警告级别">
-              <el-option label="NOTHING" :value="0"></el-option>
-              <el-option label="LOG_ONLY" :value="1"></el-option>
-              <el-option label="STORE_INFO" :value="2"></el-option>
-              <el-option label="NOTICE_USER" :value="3"></el-option>
+              <el-option label="无" :value="0"></el-option>
+              <el-option label="日志输出" :value="1"></el-option>
+              <el-option label="存储告警" :value="2"></el-option>
+              <el-option label="系统中通知" :value="4"></el-option>
+              <el-option label="紧急通知" :value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="监控项">
@@ -115,10 +116,23 @@ export default {
           </el-form-item>
 
 
+          <!-- 通知方式 -->
+          <el-form-item label="紧急通知方式" prop="noticeWay" v-if="warnForm.warnLevel===3">
+            <el-select v-model="warnForm.noticeWay" placeholder="请选择通知方式">
+              <el-option label="消息" value="message"></el-option>
+              <el-option label="邮件" value="email"></el-option>
+            </el-select>
+          </el-form-item>
 
-          <el-form-item label="通知用户" v-if="warnForm.warnLevel===3">
-            <el-select v-model="warnForm.noticeUserIds" multiple placeholder="请选择通知用户" filterable>
-              <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <!-- 通知用户ID -->
+          <el-form-item label="通知分组">
+            <el-select v-model="warnForm.noticeGroupIds" v-if="warnForm.warnLevel>=3" multiple>
+              <el-option
+                  v-for="item in groupList"
+                  :key="item.group.id"
+                  :label="item.group.name"
+                  :value="item.group.id">
+              </el-option>
             </el-select>
           </el-form-item>
 

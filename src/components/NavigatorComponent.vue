@@ -65,7 +65,7 @@ export default {
         </template>
         <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
         <el-menu-item index="4-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
-<!--        <el-menu-item index="4-2" @click="goToPage('/warn/search')" disabled>我的告警</el-menu-item>-->
+        <el-menu-item index="4-2" @click="goToPage('/warn/handle')">告警处理</el-menu-item>
       </el-submenu>
       <el-submenu index="5" disabled>
         <i class="el-icon-document"></i>

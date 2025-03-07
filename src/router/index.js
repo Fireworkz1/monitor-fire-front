@@ -13,6 +13,7 @@ import PermissionLevelView from "@/views/PermissionLevelView.vue";
 import WarnSearchView from "@/views/WarnSearchView.vue";
 import WarnManageView from "@/views/WarnManageView.vue";
 import MonitorDataView from "@/views/MonitorDataView.vue";
+import WarnHandleView from "@/views/WarnHandleView.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,6 +30,7 @@ const routes = [
   {path: '/permission/level', component: PermissionLevelView},
   {path: '/warn/manage', component: WarnManageView},
   {path: '/warn/search', component: WarnSearchView},
+  {path: '/warn/handle', component: WarnHandleView},
   { path: '/monitor/data',name: 'MonitorDataView', component: MonitorDataView},
 
   {path: '/about', component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')}

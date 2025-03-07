@@ -10,14 +10,28 @@ export default {
     WarnDetailDescription
   },
   methods:{
+    async fetchGroupData(){
+      try{
+         this.groupData= (await axios.get('/account/selectGroupInfo')).data;
+      }catch (error){
+        this.$message.error("分组获取失败，请刷新后重新打开表单");
+      }
+    },
+    async update(row) {
+      try{
+        if(this.groupData==null){
+          await this.fetchGroupData();
+        }
+        this.editDialogVisible = true;
+        this.updateForm = {...row};
+      }catch (error){
+        this.$message.error(error);
+      }
 
-    update(row){
-      this.editDialogVisible=true;
-      this.updateForm={ ...row };
     },
     handleDelete(row){
       try{
-        axios.post('/warn/delete',null,{
+        axios.post('/warn/deletePolicy',null,{
           params:{
             warnPolicyId:row.id
           }
@@ -34,7 +48,7 @@ export default {
       // 保存修改
       try {
         if (this.currentEditIndex !== null) {
-          await axios.post('/warn/update',this.updateForm);
+          await axios.post('/warn/updatePolicy',this.updateForm);
           window.location.reload();
         }
 
@@ -89,21 +103,24 @@ export default {
       // 根据 warnLevel 的值返回对应的 label
       switch (cellValue) {
         case 0:
-          return "NOTHING";
+          return "无";
         case 1:
-          return "LOG_ONLY";
+          return "日志输出";
         case 2:
-          return "STORE_INFO";
+          return "存储告警";
         case 3:
-          return "NOTICE_USER";
+          return "紧急通知";
+        case 4:
+          return "系统中通知";
         default:
           return "未知";
       }
     },
     async fetchData(){
       try{
-          this.warnList=(await axios.post('/warn/getWarn')).data;
+          this.warnList=(await axios.post('/warn/getWarnPolicy')).data;
           this.monitorList=(await axios.post('/monitor/selectLike')).data;
+         this.groupData= (await axios.get('/account/selectGroupInfo')).data;
       }catch (error){
         this.$message.error(error);
         this.warnList=[];
@@ -113,7 +130,7 @@ export default {
     },
     async searchData() {
       try {
-        this.warnList = (await axios.post('/warn/getWarn',null,{
+        this.warnList = (await axios.post('/warn/getWarnPolicy',null,{
           params: {
             str:this.searchstr
           }
@@ -143,6 +160,7 @@ export default {
   },
   data(){
     return{
+      groupData:null,
       searchstr:'',
       warnList:[],
       monitorList:[],
@@ -170,7 +188,7 @@ export default {
         warnDescription: '',
         monitorId: null,
         monitorName:'',
-        noticeUserIds: '',
+        noticeGroupIds: '',
         currentStatus: null,
         startWarningTime: null,
         lastWarningTime: null,
@@ -197,16 +215,8 @@ export default {
         warnSourceType: "", // String
         compareType: "", // String
         warnThreshold: null, // Double
-        warnRepeatTimes: null, // Integer
         warnDescription: "", // String
-        monitorId: null, // Integer
-        monitorName: "", // String
-        noticeUserIds: "", // String
-        currentStatus: "", // String
-        startWarningTime: null, // Date
-        lastWarningTime: null, // Date
-        isActive: null, // Integer
-        hasSentNotice: null, // Integer
+        noticeGroupIds: [], // String
         noticeWay: ""
       }
     }
@@ -232,7 +242,7 @@ export default {
 
       <el-table
           border
-          :data="filteredWarnList"
+          :data="warnList"
           style="width: 100%"
           height="400">
 
@@ -284,29 +294,11 @@ export default {
           {{ scope.row.compareType }} {{scope.row.warnThreshold}}
         </template>
         </el-table-column>
-        <el-table-column
-            label="告警对象"
-            v-if="isDetail"
-            width="100">
-          <template slot-scope="scope">
-            <el-popover
-                placement="top-start"
-                title="当前告警数据"
-                width="500"
-                trigger="hover"
-                v-if="scope.row.isActive===1"
-                :content="scope.row.currentWarnTarget"
-                  >
-              <el-button slot="reference">点我</el-button>
-            </el-popover>
-            <div v-if="scope.row.isActive===0">   安全</div>
-          </template>
 
-        </el-table-column>
         <el-table-column
           label="当前状态"
           width="100"
-          v-if="isDetail">
+          >
         <template v-slot="scope">
           <el-tag
               :closable="false"
@@ -325,17 +317,14 @@ export default {
                 @click="seeDetails(scope.row)">显示详情</el-button>
             <el-button
                 size="mini"
-                v-if="!isDetail"
                 @click="update(scope.row)">编辑</el-button>
             <el-button
                 size="mini"
                 type="danger"
-                v-if="!isDetail"
                 @click="dialogVisible=true;local.row=scope.row">删除</el-button>
             <el-button
                 size="mini"
                 :type="scope.row.monitorOn?'danger':'primary'"
-                v-if="!isDetail"
                 @click="changeDialogVisible=true;local1.row=scope.row">启用/禁用告警监控</el-button>
           </template>
         </el-table-column>
@@ -358,11 +347,11 @@ export default {
 
       <el-dialog
           v-if="detailDialogVisible"
-          :title="isDetail?'告警详情':'规则详情'"
+          title="规则详情"
           :visible.sync="detailDialogVisible"
           width="80%"
       >
-        <warn-detail-description :warn-entity="local.row" :is-detail="isDetail"></warn-detail-description>
+        <warn-detail-description :warn-entity="local.row"></warn-detail-description>
         <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="closeDetails">确 定</el-button>
             </span>
@@ -387,19 +376,12 @@ export default {
           <!-- 告警级别 -->
           <el-form-item label="告警级别" prop="warnLevel">
             <el-select v-model="updateForm.warnLevel" placeholder="请选择告警级别">
-              <el-option label="NOTHING" :value="0"></el-option>
-              <el-option label="LOG_ONLY" :value="1"></el-option>
-              <el-option label="STORE_INFO" :value="2"></el-option>
-              <el-option label="NOTICE_USER" :value="3"></el-option>
+              <el-option label="无" :value="0"></el-option>
+              <el-option label="日志输出" :value="1"></el-option>
+              <el-option label="存储告警" :value="2"></el-option>
+              <el-option label="系统中通知" :value="4"></el-option>
+              <el-option label="紧急通知" :value="3"></el-option>
             </el-select>
-          </el-form-item>
-
-          <!-- 是否启用监控 -->
-          <el-form-item label="告警监控状态">
-            <el-radio-group v-model="updateForm.monitorOn">
-              <el-radio :label="1">启用</el-radio>
-              <el-radio :label="0">禁用</el-radio>
-            </el-radio-group>
           </el-form-item>
 
           <!-- 比较类型 -->
@@ -430,7 +412,7 @@ export default {
           </el-form-item>
 
           <!-- 通知方式 -->
-          <el-form-item label="通知方式" prop="noticeWay" v-if=" updateForm.warnLevel===3">
+          <el-form-item label="紧急通知方式" prop="noticeWay" v-if="updateForm.warnLevel===3">
             <el-select v-model="updateForm.noticeWay" placeholder="请选择通知方式">
               <el-option label="消息" value="message"></el-option>
               <el-option label="邮件" value="email"></el-option>
@@ -438,11 +420,15 @@ export default {
           </el-form-item>
 
           <!-- 通知用户ID -->
-          <el-form-item label="通知用户ID" prop="noticeUserIds" v-if=" updateForm.warnLevel===3">
-            <el-input
-                v-model="updateForm.noticeUserIds"
-                placeholder="请输入通知用户ID"
-            ></el-input>
+          <el-form-item label="通知分组">
+            <el-select v-model="updateForm.noticeGroupIds" v-if="updateForm.warnLevel>=3" multiple>
+              <el-option
+                  v-for="item in groupData"
+                  :key="item.group.id"
+                  :label="item.group.name"
+                  :value="item.group.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
 

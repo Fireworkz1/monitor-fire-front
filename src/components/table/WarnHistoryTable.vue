@@ -73,13 +73,15 @@ export default {
       // 根据 warnLevel 的值返回对应的 label
       switch (cellValue) {
         case 0:
-          return "NOTHING";
+          return "无";
         case 1:
-          return "LOG_ONLY";
+          return "日志输出";
         case 2:
-          return "STORE_INFO";
+          return "存储告警";
         case 3:
-          return "NOTICE_USER";
+          return "紧急通知";
+        case 4:
+          return "系统中通知";
         default:
           return "未知";
       }
@@ -170,7 +172,7 @@ export default {
 
     <el-table
         border
-        :data="filteredWarnList"
+        :data="warnList"
         style="width: 100%"
         :default-sort="{ prop: 'id', order:'descending'}"
         height="400">

@@ -10,15 +10,14 @@ export default {
       try {
         // 模拟登录请求
         const response = await axios.get('/dashboard/basicInfo');
-        console.log(response)
         this.serverNum=response.data.serverNum;
         this.microserviceNum=response.data.softwareNum;
         this.userNum=response.data.userNum;
         this.warningRuleNum=response.data.warnNum;
         this.dbNum=response.data.dbNum;
         this.cacheNum=response.data.cacheNum;
-        this.totalWarningNum=65;
-        this.hisWarningNum=45;
+        this.totalWarningNum=response.data.totalWarningNum;
+        this.hisWarningNum=response.data.hisWarningNum;
         //todo:这里修改为实际数量
       } catch (error) {
         // 登录失败，显示错误信息
@@ -60,8 +59,8 @@ export default {
 
       <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>系统注册人数<br><br>     <h2>{{userNum}}</h2></h4></div></el-col>
       <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>告警规则条数<br><br>     <h2>{{warningRuleNum}}</h2></h4></div></el-col>
-      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>总计告警次数<br><br>     <h2>{{totalWarningNum}}</h2></h4></div></el-col>
-      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>处理告警数量<br><br>     <h2>{{hisWarningNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>总计监控次数<br><br>     <h2>{{totalWarningNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>处理告警条数<br><br>     <h2>{{hisWarningNum}}</h2></h4></div></el-col>
     </el-row>
   </div>
 
