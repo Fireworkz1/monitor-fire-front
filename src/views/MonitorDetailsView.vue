@@ -1,7 +1,7 @@
 <script>
 import HelloWorld from "@/components/title/HelloWorld.vue";
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
-import MonitorOverseeComponent from "@/components/MonitorOverseeComponent.vue";
+import MonitorOverseeComponent from "@/components/oversee/MonitorOverseeComponent.vue";
 import PageLabel from "@/components/title/PageLabel.vue";
 import axios from "@/axios";
 
@@ -161,10 +161,7 @@ export default {
 .bg-purple {
   background: #d3dce6;
 }
-.bg-purple-light {
-  background: #e5e9f2;
 
-}
 .grid-content {
   border-radius: 16px;
   min-height: 250px;

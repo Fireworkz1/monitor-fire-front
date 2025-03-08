@@ -61,15 +61,21 @@ export default {
       </el-submenu>
       <el-submenu index="4" >
         <template slot="title">
+          <i class="el-icon-location"></i>
           <span>监控告警</span>
         </template>
         <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
         <el-menu-item index="4-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
         <el-menu-item index="4-2" @click="goToPage('/warn/handle')">告警处理</el-menu-item>
       </el-submenu>
-      <el-submenu index="5" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">自动化配置</span>
+      <el-submenu index="5">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>自动化配置</span>
+        </template>
+
+        <el-menu-item index="5-1" @click="goToPage('/auto/console')">控制台</el-menu-item>
+        <el-menu-item index="5-2" @click="goToPage('/auto/policy')">自动化策略</el-menu-item>
       </el-submenu>
       <el-submenu index="6">
         <template>

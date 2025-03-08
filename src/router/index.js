@@ -14,6 +14,9 @@ import WarnSearchView from "@/views/WarnSearchView.vue";
 import WarnManageView from "@/views/WarnManageView.vue";
 import MonitorDataView from "@/views/MonitorDataView.vue";
 import WarnHandleView from "@/views/WarnHandleView.vue";
+import AutoConsoleView from "@/views/AutoConsoleView.vue";
+import AutoPolicyView from "@/views/AutoPolicyView.vue";
+import DockerConsoleView from "@/views/DockerConsoleView.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -31,7 +34,10 @@ const routes = [
   {path: '/warn/manage', component: WarnManageView},
   {path: '/warn/search', component: WarnSearchView},
   {path: '/warn/handle', component: WarnHandleView},
+  {path: '/auto/console', component: AutoConsoleView},
+  {path: '/auto/policy', component: AutoPolicyView},
   { path: '/monitor/data',name: 'MonitorDataView', component: MonitorDataView},
+  { path: '/docker/console',name: 'DockerConsoleView', component: DockerConsoleView},
 
   {path: '/about', component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')}
 ]
