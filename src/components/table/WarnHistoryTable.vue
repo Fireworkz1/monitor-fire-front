@@ -13,6 +13,7 @@ export default {
     async fetchData(){
       try{
         this.warnList=(await axios.post('/warn/warnhistory')).data;
+        this.monitorList=(await axios.post('/monitor/selectLike')).data;
 
       }catch (error){
         this.$message.error(error);
@@ -93,12 +94,20 @@ export default {
       //   return this.warnList.filter(item => item.monitorOn === 1);
       // else
         return this.warnList
+    },
+    monitorMap() {
+      const map = {};
+      this.monitorList.forEach(item => {
+        map[item.id] = item;
+      });
+      return map;
     }
   },
   data(){
     return{
       searchstr:'',
       warnList:[],
+      monitorList:[],
       dialogVisible:false,
       editDialogVisible:false,
       detailDialogVisible:false,
@@ -173,67 +182,67 @@ export default {
     <el-table
         border
         :data="warnList"
-        style="width: 100%"
+        style="width: 100%;margin-bottom: 80px"
         :default-sort="{ prop: 'id', order:'descending'}"
         height="400">
       <el-table-column
-          fixed
-          prop="id"
-          label="告警历史id"
-          width="100">
-      </el-table-column>
-      <el-table-column
-          fixed
-          prop="warnPolicyId"
-          label="告警策略id"
-          width="100">
-      </el-table-column>
-      <el-table-column
-          prop="monitorName"
-          label="监控对象名称"
+          prop="warnName"
+          label="告警策略名称"
           width="200">
       </el-table-column>
       <el-table-column
-          fixed
-          prop="warnName"
-          label="告警策略名称"
-          width="160">
+          prop="warnRepeatTimes"
+          label="告警次数"
+          width="50">
       </el-table-column>
       <el-table-column
           prop="warnLevel"
           label="告警级别"
-          width="200"
+          width="100"
           :formatter="formatWarnLevel">
       </el-table-column>
       <el-table-column
-          label="告警策略"
-          width="80">
-        <template slot-scope="scope">
-          {{ scope.row.compareType }} {{scope.row.warnThreshold}}
-        </template>
+          fixed
+          prop="currentStatus"
+          label="当前状态"
+          width="90">
       </el-table-column>
       <el-table-column
-          fixed
+          prop="monitorName"
+          label="监控对象名称"
+          width="130">
+      </el-table-column>
+
+      <el-table-column
+          label="告警策略"
+          width="125">
+        <template slot-scope="scope">
+          value{{ scope.row.compareType }} {{scope.row.warnThreshold}}
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+
           prop="startWarningTime"
           label="首次告警时间"
-          width="160">
+          width="230">
       </el-table-column>
       <el-table-column
-          fixed
           prop="lastWarningTime"
           label="最后告警时间"
-          width="160">
+          width="230">
       </el-table-column>
 
-
-
-      <el-table-column label="操作" >
-        <template slot-scope="scope">
-          <el-button
-              size="mini"
-              @click="seeDetails(scope.row)">显示详情</el-button>
+      <el-table-column
+          label="监控对象指标"
+          width="300">
+        <template v-slot="scope">
+          {{ monitorMap[scope.row.monitorId].monitorPresetTarget || monitorMap[scope.row.monitorId].monitorNotpresetPromql||'暂无监控对象' }}
         </template>
       </el-table-column>
+
+
     </el-table>
     <!--详情对话框 -->
 

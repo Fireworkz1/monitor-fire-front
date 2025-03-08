@@ -190,13 +190,13 @@ export default {
       </el-table-column>
       <el-table-column
           fixed
-          :filters="[{text: '服务器', value: 'server'}, {text: '软件资源', value: 'software'}]"
+          :filters="[{text: '服务器', value: 'server'}, {text: '软件资源', value: 'software'},{text: '数据库', value: 'mysql'}, {text: '高速缓存', value: 'redis'}]"
           :filter-method="filterHandler"
           :formatter="formatterHandler"
           prop="resourceType"
           label="资源类型"
           v-if="resourceType==null"
-          width="80">
+          width="120">
       </el-table-column>
       <el-table-column
           prop="resourceIp"

@@ -26,7 +26,7 @@ export default {
           <HelloWorld msg="报警查询页" />
         </el-header>
         <el-main>
-          <page-label label="当前告警"></page-label>
+          <page-label label="正在告警"></page-label>
           <warn-entity-table></warn-entity-table>
           <page-label label="历史告警"></page-label>
           <warn-history-table></warn-history-table>

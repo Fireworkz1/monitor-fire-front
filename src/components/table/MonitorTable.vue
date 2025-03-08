@@ -160,7 +160,7 @@ export default {
         border
         :default-sort="{ prop: 'id', order: 'descending' }"
         :data="monitorList"
-        style="width: 100%"
+        style="width: 100%;margin-bottom: 80px"
         height="400">
       <el-table-column
           fixed

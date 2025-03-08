@@ -9,11 +9,28 @@ export default {
   },
   methods:{
 
-    knowWarn(){
-      this.$message("确认告警逻辑")
+    async confirmWarn(row) {
+      await axios.post('/warn/warnconfirm', null, {
+        params: {
+          entityId:row.id,
+          type:'confirm'
+        }
+      })
+      this.local.row=null;
+      this.$message('确认成功');
+      this.changeDialogVisible=false;
+
     },
-    dismissWarn(){
-      this.$message("忽略告警逻辑")
+    async dismissWarn(row) {
+      await axios.post('/warn/warnconfirm', null, {
+        params: {
+          entityId:row.id,
+          type: 'dismiss'
+        }
+      })
+      this.local.row=null;
+      this.$message('已忽略告警');
+      this.dialogVisible=false;
     },
 
     formatWarnLevel(row, column, cellValue) {
@@ -45,7 +62,7 @@ export default {
           this.warnList=(await axios.post('/warn/warnentity')).data;
         }
         this.monitorList=(await axios.post('/monitor/selectLike')).data;
-        console.log(this.warnList)
+
       }catch (error){
         this.$message.error(error);
         this.warnList=[];
@@ -261,11 +278,11 @@ export default {
           <el-button
               size="mini"
               type="primary"
-              @click="changeDialogVisible=true;local1.row=scope.row">确定</el-button>
+              @click="local.row=scope.row;changeDialogVisible=true;">确定</el-button>
           <el-button
               size="mini"
               type="danger"
-              @click="dialogVisible=true;local.row=scope.row">忽略</el-button>
+              @click="local.row=scope.row;dialogVisible=true;local.row=scope.row">忽略</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -278,8 +295,8 @@ export default {
       <span>确定已经知晓该告警，并将告警添加到历史告警吗？</span>
       <span>确定后，指标将从告警队列中删除，若指标再次超过阈值将再次触发告警。</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="local1.row=null; changeDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="knowWarn">确 定</el-button>
+        <el-button @click="local.row=null; changeDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmWarn(local.row)">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -295,8 +312,8 @@ export default {
       <span>确定忽略该告警吗？</span>
       <span>该指标再次告警将忽略，直至恢复至安全状态。</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dismissWarn">确 定</el-button>
+        <el-button @click="local.row=null;dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dismissWarn(local.row)">确 定</el-button>
             </span>
     </el-dialog>
     <!-- 编辑对话框 -->

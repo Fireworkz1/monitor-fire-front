@@ -59,7 +59,7 @@ export default {
 
       <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>系统注册人数<br><br>     <h2>{{userNum}}</h2></h4></div></el-col>
       <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>告警规则条数<br><br>     <h2>{{warningRuleNum}}</h2></h4></div></el-col>
-      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>总计监控次数<br><br>     <h2>{{totalWarningNum}}</h2></h4></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>采集指标次数<br><br>     <h2>{{totalWarningNum}}</h2></h4></div></el-col>
       <el-col :span="6"><div class="grid-content bg-purple-light" style="display: flex; justify-content: center; align-items: center; height: 100%;"><h4>处理告警条数<br><br>     <h2>{{hisWarningNum}}</h2></h4></div></el-col>
     </el-row>
   </div>
