@@ -5,7 +5,12 @@ import PageLabel from "@/components/title/PageLabel.vue";
 import DockerOverseeComponent from "@/components/oversee/DockerOverseeComponent.vue";
 
 export default {
-  components: {PageLabel, HelloWorld, NavigatorComponent,DockerOverseeComponent}
+  components: {PageLabel, HelloWorld, NavigatorComponent,DockerOverseeComponent},
+  data(){
+    return{
+
+    }
+  }
 
 }
 </script>
@@ -20,7 +25,7 @@ export default {
         <el-header>
           <HelloWorld msg="控制台" />
         </el-header>
-        <el-main>
+        <el-main v-loading="">
           <page-label label="Docker资源远程控制"></page-label>
             <docker-oversee-component></docker-oversee-component>
           <page-label label="Systemd资源远程控制"></page-label>

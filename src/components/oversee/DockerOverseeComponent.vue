@@ -6,13 +6,14 @@ export default {
   methods:{
 
     async fetchData() {
+      this.loading=true;
       try{
         this.items=[];
         this.items=(await axios.post('/resource/software/docker/selectItems')).data;
       }catch (error){
         this.$message.error(error);
       }
-
+      this.loading=false;
     },
     jumpToDetail(item) {
       this.$router.push({ name: 'DockerConsoleView', query: { id: item.id }});
@@ -20,6 +21,7 @@ export default {
   },
   data(){
     return{
+      loading:false,
       searchstr:'',
       items: [],
       colsPerRow: 3, // 每行显示的列数
@@ -42,7 +44,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div v-loading="loading" style="min-height: 60px">
 
     <el-row
         v-for="(group, rowIndex) in chunkedItems"
