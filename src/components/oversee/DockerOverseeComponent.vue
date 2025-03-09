@@ -4,8 +4,10 @@ import axios from "@/axios";
 export default {
   components: {},
   methods:{
+
     async fetchData() {
       try{
+        this.items=[];
         this.items=(await axios.post('/resource/software/docker/selectItems')).data;
       }catch (error){
         this.$message.error(error);
@@ -13,7 +15,7 @@ export default {
 
     },
     jumpToDetail(item) {
-      this.$router.push({ name: 'DockerConsoleView', query: { item: item }});
+      this.$router.push({ name: 'DockerConsoleView', query: { id: item.id }});
     }
   },
   data(){

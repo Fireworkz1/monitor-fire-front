@@ -25,6 +25,7 @@ axiosInstance.interceptors.request.use(
 // 响应拦截器
 axiosInstance.interceptors.response.use(
     response => {
+        console.log(response)
         // 检查业务状态码
         if (response.data && response.data.code === 500) {
             // 抛出业务错误

@@ -21,9 +21,9 @@ export default {
           <HelloWorld msg="控制台" />
         </el-header>
         <el-main>
-          <page-label label="Docker资源"></page-label>
+          <page-label label="Docker资源远程控制"></page-label>
             <docker-oversee-component></docker-oversee-component>
-          <page-label label="Systemd资源"></page-label>
+          <page-label label="Systemd资源远程控制"></page-label>
           <el-empty description="暂无"></el-empty>
         </el-main>
       </el-container>

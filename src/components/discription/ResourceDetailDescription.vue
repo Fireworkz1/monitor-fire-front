@@ -5,7 +5,7 @@
 import axios from "@/axios";
 
 export default {
-  props:["idd","type"],
+  props:["idd","type","docker"],
   data(){
     return{
       res:{},
@@ -91,7 +91,7 @@ export default {
 <template>
   <div>
 
-    <el-descriptions >
+    <el-descriptions :title="docker===`docker`?`Container内资源信息`:`资源信息`" direction="vertical" border :column="4">
       <el-descriptions-item label="资源id">{{this.res.resourceId}}</el-descriptions-item>
       <el-descriptions-item label="资源名称">{{this.res.resourceName}}</el-descriptions-item>
       <el-descriptions-item label="资源是否在线">
