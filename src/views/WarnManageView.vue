@@ -21,7 +21,7 @@ export default {
       </el-aside>
       <el-container style="border: 1px solid #eee">
         <el-header>
-          <HelloWorld msg="报警配置页" />
+          <HelloWorld msg="告警配置页" />
         </el-header>
         <el-main>
           <warn-register-form></warn-register-form>

@@ -23,7 +23,7 @@ export default {
       </el-aside>
       <el-container style="border: 1px solid #eee">
         <el-header>
-          <HelloWorld msg="报警查询页" />
+          <HelloWorld msg="告警查询页" />
         </el-header>
         <el-main>
           <page-label label="正在告警"></page-label>

@@ -21,10 +21,10 @@ export default {
       </el-aside>
       <el-container style="border: 1px solid #eee">
         <el-header>
-          <HelloWorld msg="报警处理页" />
+          <HelloWorld msg="我的告警" />
         </el-header>
         <el-main>
-          <page-label label="我的告警"></page-label>
+          <page-label label="告警处理"></page-label>
           <warn-entity-table :is-detail="true"></warn-entity-table>
         </el-main>
       </el-container>
