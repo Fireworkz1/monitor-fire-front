@@ -122,7 +122,9 @@ export default {
       <el-main style="margin-top: 40px;">
         <page-label label="资源信息"></page-label>
         <el-descriptions title="Docker Container信息" direction="vertical" :column="2" border style="margin-top: 20px;margin-bottom: 60px">
-          <el-descriptions-item label="状态">{{dockerDetail.status}}</el-descriptions-item>
+          <el-descriptions-item label="状态">
+            <el-tag  :style="dockerDetail.status === 'running' ? { background: '#67C23A', color: 'white' } : { background: '#F56C6C', color: 'white' }"
+                     >{{dockerDetail.status}}</el-tag></el-descriptions-item>
           <el-descriptions-item label="创建时间">{{dockerDetail.createdAt}}</el-descriptions-item>
           <el-descriptions-item label="启动时间">{{dockerDetail.startedAt}}</el-descriptions-item>
           <el-descriptions-item label="名字">{{ dockerDetail.name }}</el-descriptions-item>

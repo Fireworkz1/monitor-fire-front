@@ -297,14 +297,14 @@ export default {
 
         <el-table-column
           label="当前状态"
-          width="100"
+          width="80"
           >
         <template v-slot="scope">
           <el-tag
               :closable="false"
-              :color="scope.row.isActive ? 'red' : 'success'"
+              :color="scope.row.isActive ? '#E6A23C' : '#67C23A'"
               effect="dark">
-            {{ scope.row.isActive ? '正在告警' : '安全' }}
+            {{ scope.row.isActive ? '告  警' : '安  全' }}
           </el-tag>
         </template>
       </el-table-column>
@@ -314,7 +314,7 @@ export default {
           <template slot-scope="scope">
             <el-button
                 size="mini"
-                @click="seeDetails(scope.row)">显示详情</el-button>
+                @click="seeDetails(scope.row)">显示配置详情</el-button>
             <el-button
                 size="mini"
                 @click="update(scope.row)">编辑</el-button>

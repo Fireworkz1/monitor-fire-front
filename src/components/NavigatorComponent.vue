@@ -39,10 +39,10 @@ export default {
       <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>资源控制</span>
+          <span>资源配置</span>
         </template>
 <!--        <el-menu-item index="1-1">资源总览</el-menu-item>-->
-        <el-menu-item index="1-1" @click="goToPage('/form/register')">资源配置</el-menu-item>
+        <el-menu-item index="1-1" @click="goToPage('/form/register')">资源注册</el-menu-item>
         <el-menu-item index="1-2" @click="goToPage('/form/manage')">资源管理</el-menu-item>
 
       </el-submenu>
@@ -74,7 +74,7 @@ export default {
           <span>自动化配置</span>
         </template>
 
-        <el-menu-item index="5-1" @click="goToPage('/auto/console')">控制台</el-menu-item>
+        <el-menu-item index="5-1" @click="goToPage('/auto/console')">资源控制台</el-menu-item>
         <el-menu-item index="5-2" @click="goToPage('/auto/policy')">自动化策略</el-menu-item>
       </el-submenu>
       <el-submenu index="6">

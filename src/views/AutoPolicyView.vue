@@ -2,10 +2,12 @@
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 import HelloWorld from "@/components/title/HelloWorld.vue";
 import PageLabel from "@/components/title/PageLabel.vue";
+import AutoRegisterForm from "@/components/form/AutoRegisterForm.vue";
+import AutoTable from "@/components/table/AutoTable.vue";
+
 
 export default {
-  components: {PageLabel, HelloWorld, NavigatorComponent}
-
+  components: {PageLabel, HelloWorld, NavigatorComponent, AutoRegisterForm,AutoTable}
 }
 </script>
 
@@ -20,8 +22,10 @@ export default {
           <HelloWorld msg="自动化策略" />
         </el-header>
         <el-main>
-          <page-label label="资源管理"></page-label>
-
+          <page-label label="创建策略"></page-label>
+          <auto-register-form></auto-register-form>
+          <page-label label="策略列表"></page-label>
+          <auto-table style="margin-bottom: 60px"></auto-table>
         </el-main>
       </el-container>
     </el-container>

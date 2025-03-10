@@ -26,6 +26,15 @@ export default {
           <HelloWorld msg="控制台" />
         </el-header>
         <el-main v-loading="">
+          <el-alert
+              title="资源控制台可以实现对资源的远程操作，如启动，停止，查看日志等。因远程操作服务器风险较大，当前只提供对软件资源（微服务，数据库，缓存等）的控制操作。"
+              type="warning"
+              center
+              :closable="false"
+              show-icon
+              style="font-size: 25px !important;"
+          >
+          </el-alert>
           <page-label label="Docker资源远程控制"></page-label>
             <docker-oversee-component></docker-oversee-component>
           <page-label label="Systemd资源远程控制"></page-label>

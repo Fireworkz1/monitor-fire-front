@@ -50,6 +50,9 @@ export default {
           return "未知";
       }
     },
+    jump(id){
+      this.$router.push({ name: 'MonitorDataView', query: { monitorId: id }});
+    },
     async fetchData(){
       try{
         if(this.isDetail){
@@ -222,7 +225,7 @@ export default {
         </template>
       </el-table-column>
       <el-table-column
-          label="告警对象"
+          label="告警数据"
           width="100">
         <template slot-scope="scope">
           <el-popover
@@ -230,9 +233,12 @@ export default {
               title="当前告警数据"
               width="500"
               trigger="hover"
-              :content="scope.row.currentWarningTarget"
           >
             <el-button slot="reference">点我</el-button>
+            <p>{{scope.row.currentWarningTarget}}</p>
+            <div style="text-align: right; margin: 0">
+              <el-button type="primary" size="mini" @click="jump(scope.row.monitorId)">查看指标数据</el-button>
+            </div>
           </el-popover>
         </template>
       </el-table-column>
