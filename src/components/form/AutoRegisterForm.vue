@@ -82,6 +82,7 @@ export default {
       try {
         // 模拟提交到后端的 API 请求
         await axios.post("/auto/createGroup", this.formData2);
+        this.dialogVisible2=false;
       } catch (error) {
         this.$message.error(error);
       }
