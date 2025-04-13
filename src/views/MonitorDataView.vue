@@ -101,7 +101,7 @@ export default {
       datePickerTime:null,
       chartInsatance:null,
       metricFieldsFilters:null,
-      getValueRepeatly:false,
+      getValueRepeatly:true,
       intervalId: null,
       fetchCount:0,
       isFetching:false,

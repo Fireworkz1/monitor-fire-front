@@ -24,8 +24,9 @@ export default {
         <el-main>
           <page-label label="创建策略"></page-label>
           <auto-register-form></auto-register-form>
-          <page-label label="策略列表"></page-label>
+          <page-label label="自动启停"></page-label>
           <auto-table style="margin-bottom: 60px"></auto-table>
+          <page-label label="缩扩容规则组"></page-label>
         </el-main>
       </el-container>
     </el-container>

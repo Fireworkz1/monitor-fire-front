@@ -5,7 +5,8 @@ import axios from "@/axios";
 export default {
   data() {
     return {
-      dialogVisible: false, // 控制弹窗显示
+      dialogVisible: false,
+      dialogVisible2: false,// 控制弹窗显示
       formData: {
         autoName: "",
         autoPolicy: "",
@@ -13,6 +14,12 @@ export default {
         warnThreshold: null,
         resourceId: null,
         monitorPresetTarget: "",
+      },
+      formData2: {
+        autoGroupName:"",
+        autoPolicyIds:[],
+        resourceIds:[],
+        description:"",
       },
       loading:false,
       resourceType:'',
@@ -40,12 +47,24 @@ export default {
     openDialog() {
       this.dialogVisible = true;
     },
+    openDialog2() {
+      this.dialogVisible2 = true;
+    },
     closeDialog() {
       this.dialogVisible = false;
       this.$refs.monitorForm.resetFields(); // 重置表单
     },
+    closeDialog2() {
+      this.dialogVisible2 = false;
+      this.startMode=null;
+      this.$refs.monitorForm2.resetFields(); // 重置表单
+    },
     handleClose(done) {
       this.closeDialog();
+      done();
+    },
+    handleClose2(done) {
+      this.closeDialog2();
       done();
     },
     submitForm() {
@@ -58,6 +77,14 @@ export default {
           this.$message.error("表单填写有误，请检查！");
         }
       });
+    },
+    async submitForm2() {
+      try {
+        // 模拟提交到后端的 API 请求
+        await axios.post("/auto/createGroup", this.formData2);
+      } catch (error) {
+        this.$message.error(error);
+      }
     },
     async submitToBackend() {
       try {
@@ -114,11 +141,11 @@ export default {
 <template>
   <div>
     <!-- 按钮触发弹窗 -->
-    <el-button type="primary" @click="openDialog">创建自动化配置</el-button>
-
+    <el-button type="primary" @click="openDialog">创建自动启停配置</el-button>
+    <el-button type="primary" @click="openDialog2">创建动态缩扩容规则组</el-button>
     <!-- 表单弹窗 -->
     <el-dialog
-        title="自动化配置"
+        title="自动启停配置"
         :visible.sync="dialogVisible"
         width="50%"
         :before-close="handleClose"
@@ -140,7 +167,7 @@ export default {
               @change="filterMode"
           >
             <el-option label="docker" value="docker"></el-option>
-            <el-option label="systemd" value="systemd"></el-option>
+            <el-option label="systemd" value="systemd" disabled></el-option>
             <el-option label="jvm" value="jvm" disabled></el-option>
             <el-option label="其他" value="others" disabled></el-option>
           </el-select>
@@ -212,6 +239,84 @@ export default {
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
         <el-button type="primary" @click="submitForm">创 建</el-button>
+      </span>
+    </el-dialog>
+
+
+
+    <el-dialog
+        title="缩扩容规则组配置"
+        :visible.sync="dialogVisible2"
+        width="50%"
+        :before-close="handleClose2"
+        v-loading="loading"
+    >
+      <el-form
+          ref="monitorForm2"
+          :model="formData2"
+          label-width="150px"
+
+      >
+        <el-form-item label="规则组命名" >
+          <el-input v-model="formData2.autoGroupName" placeholder="请输入规则组命名"></el-input>
+        </el-form-item>
+        <el-form-item label="规则组描述" >
+          <el-input v-model="formData2.description" placeholder="请输入描述"></el-input>
+        </el-form-item>
+        <el-form-item label="资源启动方式">
+          <el-select
+              v-model="startMode"
+              placeholder="请选择资源类型"
+              @change="filterMode"
+          >
+            <el-option label="docker" value="docker"></el-option>
+            <el-option label="systemd" value="systemd" disabled></el-option>
+            <el-option label="jvm" value="jvm" disabled></el-option>
+            <el-option label="其他" value="others" disabled></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作资源类型">
+          <el-select
+              v-model="resourceType"
+              placeholder="请选择资源类型"
+              v-if="startMode!==''"
+              @change="filterResources"
+          >
+            <el-option label="微服务资源" value="software"></el-option>
+            <el-option label="数据库资源" value="mysql"></el-option>
+            <el-option label="高速缓存资源" value="redis"></el-option>
+            <el-option label="服务器资源" value="server" disabled></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作资源" prop="resourceId">
+          <el-select
+              v-model="formData2.resourceIds"
+              placeholder="请选择缩扩容集群"
+              filterable
+              multiple
+              v-if="resourceType!==''&&startMode!==''"
+          >
+            <el-option
+                v-for="item in filteredResourceList1"
+                :key="item.id"
+                :label="`${item.resourceName} (${item.resourceIp})`"
+                :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <el-alert
+          title="请选择缩扩容集群，选中的对象将根据规则被配置缩扩容"
+          type="warning"
+          center
+          :closable="false"
+          show-icon
+          style="font-size: 25px !important;"
+      >
+      </el-alert>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeDialog2">取 消</el-button>
+        <el-button type="primary" @click="submitForm2">创 建</el-button>
       </span>
     </el-dialog>
   </div>
