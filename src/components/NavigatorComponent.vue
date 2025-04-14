@@ -71,10 +71,10 @@ export default {
       <el-submenu index="5">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>自动化配置</span>
+          <span>远程控制</span>
         </template>
 
-        <el-menu-item index="5-1" @click="goToPage('/auto/console')">资源控制台</el-menu-item>
+        <el-menu-item index="5-1" @click="goToPage('/auto/console')">手动控制台</el-menu-item>
         <el-menu-item index="5-2" @click="goToPage('/auto/policy')">自动化策略</el-menu-item>
       </el-submenu>
       <el-submenu index="6">

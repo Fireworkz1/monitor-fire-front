@@ -1,18 +1,19 @@
 <script>
 
 import axios from "@/axios";
+import AutoGroupPolicyTable from "@/components/table/AutoGroupPolicyTable.vue";
 
 export default {
-  components: {},
+  components: {AutoGroupPolicyTable},
   methods:{
     search() {
       this.searchData();
     },
     async changeStatus(id) {
       try {
-        await axios.post('/auto/changeStatus',null,{
+        await axios.post('/auto/changeStatusGroup',null,{
           params:{
-            autoId:id
+            autoGroupId:id
           }
         });
         setTimeout(() => {
@@ -24,24 +25,22 @@ export default {
       }
     },
     update(row) {
-
-      // 打开编辑对话框
-
-      // 将当前行的数据复制到表单中
-      this.currentEditIndex = this.autoList.indexOf(row);
       this.local.row=row;
-      this.updateForm = { ...row }; // 使用扩展运算符复制对象
       this.editDialogVisible = true;
+    },
+    view(row) {
+      this.local.row=row;
+      this.infoDialogVisible = true;
     },
     async handleDelete(row) {
       try{
         // 删除逻辑
-        await axios.post('/auto/delete', null, {
+        await axios.post('/auto/deleteGroup', null, {
           params:{
-           autoId:row.id
+            autoGroupId:row.id
           }
         });
-        this.autoList.splice(row.id - 1, 1);
+        this.autoGroupList.splice(row.id - 1, 1);
         this.dialogVisible = false;
         this.local.row = null;
         this.$message('删除成功！');
@@ -87,7 +86,7 @@ export default {
     },
     async fetchData(){
       try{
-        this.autoList=(await axios.post('/auto/select',null,{
+        this.autoGroupList=(await axios.post('/auto/selectGroup',null,{
           params: {
             str:this.searchstr
           }
@@ -105,7 +104,7 @@ export default {
     },
     async searchData() {
       try {
-        this.autoList=(await axios.post('/auto/select',null,{
+        this.autoGroupList=(await axios.post('/auto/selectGroup',null,{
           params: {
             str:this.searchstr
           }
@@ -119,6 +118,7 @@ export default {
   },
   data() {
     return {
+      infoDialogVisible:false,
       finishFetchData:false,
       searchstr:'',
       dialogVisible:false,
@@ -127,27 +127,9 @@ export default {
         index:null,
         row:null
       },
-      auto: {
-        id: null,
-        autoName: "",
-        autoPolicy: "",
-        compareType: "",
-        warnThreshold: null,
-        resourceId: null,
-        monitorOn: null,
-        monitorPresetTarget: "",
-        modifiedTime: null
-      },
-      autoList:[],
-      updateForm:{
-        id: null,
-        autoName: "",
-        autoPolicy: "",
-        compareType: "",
-        warnThreshold: null,
-        monitorOn: null,
-        monitorPresetTarget:null,
-      },
+
+      autoGroupList:[],
+
       softwareResourceList:[],
       softwareResourceMap: {},
     };
@@ -176,15 +158,16 @@ export default {
     <el-table
         v-if="finishFetchData"
         border
-        :data="autoList"
+        :data="autoGroupList"
         style="width: 100%;margin-bottom: 80px"
         height="350">
       <el-table-column
           fixed
           prop="id"
-          label="自动化id"
+          label="规则组id"
           width="100">
       </el-table-column>
+
       <el-table-column label="是否启用" width="80">
         <template slot-scope="scope">
           <el-tag
@@ -196,52 +179,25 @@ export default {
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column
+          prop="autoGroupName"
+          label="规则组名称"
+          width="160">
+      </el-table-column>
+      <el-table-column
+          prop="description"
+          label="规则组描述"
+          width="360">
+      </el-table-column>
 
       <el-table-column
-          prop="autoName"
-          label="自动化名称"
-          width="160">
-      </el-table-column>
-      <el-table-column
-          label="资源名称"
+          label="主节点"
           width="160">
         <template slot-scope="scope">
-          {{softwareResourceMap[scope.row.resourceId].resourceName|| '未知资源'}}
+          {{softwareResourceMap[scope.row.masterNodeResourceId].resourceName+"-"+softwareResourceMap[scope.row.masterNodeResourceId].resourceIp+":"+softwareResourceMap[scope.row.masterNodeResourceId].resourcePort|| '未知资源'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="80">
-        <template slot-scope="scope">
-          <el-tag
-              :closable="false"
-              :color="'#4f912c'"
-              effect="dark"
-          >
-            {{ scope.row.autoPolicy === 'restart' ? '重启' : '停止' }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="monitorPresetTarget"
-          label="触发指标"
-          width="160">
-      </el-table-column>
-      <el-table-column
-          label="触发条件"
-          width="80">
-        <template slot-scope="scope">
-          {{scope.row.compareType }}{{scope.row.warnThreshold}}
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="triggerTimes"
-          label="触发次数"
-          width="60">
-      </el-table-column>
-      <el-table-column
-          prop="modifiedTime"
-          label="修改时间"
-          width="300">
-      </el-table-column>
+
 
       <el-table-column label="操作" >
         <template slot-scope="scope">
@@ -250,7 +206,10 @@ export default {
               @click="changeStatus(scope.row.id)">{{ scope.row.monitorOn === 1 ? '关闭监控' : '打开监控' }}</el-button>
           <el-button
               size="mini"
-              @click="update(scope.row)">编辑</el-button>
+              @click="view(scope.row)">查看规则组</el-button>
+          <el-button
+              size="mini"
+              @click="update(scope.row)">编辑规则组</el-button>
           <el-button
               size="mini"
               type="danger"
@@ -259,52 +218,27 @@ export default {
       </el-table-column>
     </el-table>
 
-    <!-- 编辑对话框 -->
+<!--详情对话框-->
     <el-dialog
-        title="编辑自动启停对象"
-        :visible.sync="editDialogVisible"
-        width="50%"
-        v-if="editDialogVisible"
+        title="规则组信息"
+        :visible.sync="infoDialogVisible"
+        width="90%"
+        v-if="infoDialogVisible"
+
     >
-      <el-form label-width="120px">
-        <el-form-item label="自动化名称">
-          <el-input v-model="updateForm.autoName"></el-input>
-        </el-form-item>
-        <el-form-item label="资源名称"  >
-          <el-input  disabled :placeholder="softwareResourceMap[local.row.resourceId].resourceName"></el-input>
-        </el-form-item>
-        <el-form-item label="自动化策略" prop="autoPolicy">
-          <el-select v-model="updateForm.autoPolicy" placeholder="请选择自动策略">
-            <el-option label="停止" value="stop"></el-option>
-            <el-option label="重启" value="restart"></el-option>
-            <!--            <el-option label="启动" value="start"></el-option>-->
-          </el-select>
-        </el-form-item>
-        <el-form-item label="监控指标"  >
-          <el-input  disabled v-model="updateForm.monitorPresetTarget"></el-input>
-        </el-form-item>
-        <el-form-item label="比较类型" prop="compareType">
-          <el-select v-model="updateForm.compareType" placeholder="请选择比较类型">
-            <el-option label="等于" value="=="></el-option>
-            <el-option label="大于" value=">="></el-option>
-            <el-option label="小于" value="<="></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="触发阈值" prop="warnThreshold">
-          <el-input-number
-              v-model="updateForm.warnThreshold"
-              :min="0"
-              placeholder="请输入触发阈值"
-          ></el-input-number>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelUpdate">取 消</el-button>
-        <el-button type="primary" @click="saveUpdate">保 存</el-button>
-      </span>
+      <auto-group-policy-table :id="local.row.id" :type="'info'"></auto-group-policy-table>
     </el-dialog>
 
-    <!-- 删除确认对话框 -->
+    <!-- 编辑对话框 -->
+    <el-dialog
+        title="编辑规则组"
+        :visible.sync="editDialogVisible"
+        width="90%"
+        v-if="editDialogVisible"
+
+    >
+      <auto-group-policy-table :id="local.row.id" :type="'edit'"></auto-group-policy-table>
+    </el-dialog>
     <el-dialog
         title="提示"
         :visible.sync="dialogVisible"
@@ -317,6 +251,10 @@ export default {
       </span>
     </el-dialog>
   </div>
+
+
+
+
 </template>
 
 <style scoped>

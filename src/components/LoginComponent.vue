@@ -153,7 +153,6 @@ export default {
           account: this.account,
           password: this.password
         })).data;
-        console.log(response.token)
         // 登录成功，存储 Token
 
         localStorage.setItem('token', response.token);

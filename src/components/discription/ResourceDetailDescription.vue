@@ -78,7 +78,6 @@ export default {
   },mounted() {
     this.resourceId=this.idd;
     // console.log(this.idd);
-    console.log(this.type);
     if(this.type==="server"){
       this.getHard();
     }else{

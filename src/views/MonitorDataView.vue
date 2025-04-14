@@ -333,7 +333,6 @@ export default {
               }
               // 如果没有找到对应的 item，不进行任何操作（不添加新的 item）
             });
-            console.log(this.filteredGraphData);
             this.updateChart();
             if(this.getValueRepeatly){
               this.$message.success('数据已更新');
@@ -426,7 +425,7 @@ export default {
       this.filteredGraphData = this.computedGraphData.filter(item => {
         return this.filteredGraphDataMetricFields.includes(item.metricFields);
       });
-      console.log(this.filteredGraphData)
+
       // this.chartInsatance.dispose();
       // this.chartInsatance = null;
       this.updateChart();

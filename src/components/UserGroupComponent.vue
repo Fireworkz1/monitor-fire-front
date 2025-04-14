@@ -61,7 +61,6 @@ export default {
 
         const response = await axios.get('/account/current');
         this.currentUser = response.data;
-        console.log(this.user)
       } catch (error) {
         this.$message("获取用户信息失败:" + error.message);
       }

@@ -20,6 +20,7 @@ export default {
         autoPolicyIds:[],
         resourceIds:[],
         description:"",
+        masterNodeResourceId:null,
       },
       loading:false,
       resourceType:'',
@@ -83,6 +84,7 @@ export default {
         // 模拟提交到后端的 API 请求
         await axios.post("/auto/createGroup", this.formData2);
         this.dialogVisible2=false;
+        window.location.reload();
       } catch (error) {
         this.$message.error(error);
       }
@@ -106,7 +108,6 @@ export default {
             (item) => item.startMode!==null&&item.startMode === this.startMode
         );
       }
-      console.log(this.filteredResourceList)
     },
     filterResources() {
       // 根据选择的资源类型筛选资源列表
@@ -289,10 +290,25 @@ export default {
             <el-option label="服务器资源" value="server" disabled></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="操作资源" prop="resourceId">
+        <el-form-item label="集群主节点">
+          <el-select
+              v-model="formData2.masterNodeResourceId"
+              placeholder="请选择缩扩容集群主节点"
+              filterable
+              v-if="resourceType!==''&&startMode!==''"
+          >
+            <el-option
+                v-for="item in filteredResourceList1"
+                :key="item.id"
+                :label="`${item.resourceName} (${item.resourceIp})`"
+                :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="集群从节点群" >
           <el-select
               v-model="formData2.resourceIds"
-              placeholder="请选择缩扩容集群"
+              placeholder="请选择缩扩容集群其他节点"
               filterable
               multiple
               v-if="resourceType!==''&&startMode!==''"

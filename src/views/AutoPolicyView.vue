@@ -4,10 +4,11 @@ import HelloWorld from "@/components/title/HelloWorld.vue";
 import PageLabel from "@/components/title/PageLabel.vue";
 import AutoRegisterForm from "@/components/form/AutoRegisterForm.vue";
 import AutoTable from "@/components/table/AutoTable.vue";
+import AutoGroupTable from "@/components/table/AutoGroupTable.vue";
 
 
 export default {
-  components: {PageLabel, HelloWorld, NavigatorComponent, AutoRegisterForm,AutoTable}
+  components: {PageLabel, HelloWorld, NavigatorComponent, AutoRegisterForm,AutoTable,AutoGroupTable}
 }
 </script>
 
@@ -27,6 +28,7 @@ export default {
           <page-label label="自动启停"></page-label>
           <auto-table style="margin-bottom: 60px"></auto-table>
           <page-label label="缩扩容规则组"></page-label>
+          <auto-group-table style="margin-bottom: 60px"></auto-group-table>
         </el-main>
       </el-container>
     </el-container>
