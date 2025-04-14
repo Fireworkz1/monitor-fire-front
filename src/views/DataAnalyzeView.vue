@@ -1,8 +1,6 @@
 <script>
 import NavigatorComponent from "@/components/NavigatorComponent.vue";
 import HelloWorld from "@/components/title/HelloWorld.vue";
-import MonitorTable from "@/components/table/MonitorTable.vue";
-import MonitorRegisterForm from "@/components/form/MonitorRegisterForm.vue";
 import PageLabel from "@/components/title/PageLabel.vue";
 
 export default {
