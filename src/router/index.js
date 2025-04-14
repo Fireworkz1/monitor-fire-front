@@ -17,6 +17,8 @@ import WarnHandleView from "@/views/WarnHandleView.vue";
 import AutoConsoleView from "@/views/AutoConsoleView.vue";
 import AutoPolicyView from "@/views/AutoPolicyView.vue";
 import DockerConsoleView from "@/views/DockerConsoleView.vue";
+import DataPredictionView from "@/views/DataPredictionView.vue";
+import DataAnalyzeView from "@/views/DataAnalyzeView.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,6 +40,8 @@ const routes = [
   {path: '/auto/policy', component: AutoPolicyView},
   { path: '/monitor/data',name: 'MonitorDataView', component: MonitorDataView},
   { path: '/docker/console',name: 'DockerConsoleView', component: DockerConsoleView},
+  { path: '/data/predict', component: DataPredictionView},
+  { path: '/data/analyze', component: DataAnalyzeView},
 
   {path: '/about', component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')}
 ]

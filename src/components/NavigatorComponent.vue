@@ -48,35 +48,40 @@ export default {
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="el-icon-video-camera"></i>
           <span>资源监控</span>
         </template>
         <el-menu-item index="2-1" @click="goToPage('/monitor/manage')">监控管理</el-menu-item>
         <el-menu-item index="2-2" @click="goToPage('/monitor/details')">监控详情</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">数据洞察</span>
-      </el-submenu>
-      <el-submenu index="4" >
+      <el-submenu index="3">
         <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>监控告警</span>
+          <i class="el-icon-share"></i>
+          <span slot="title">数据洞察</span>
         </template>
-        <el-menu-item index="4-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
-        <el-menu-item index="4-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
-        <el-menu-item index="4-2" @click="goToPage('/warn/handle')">我的告警</el-menu-item>
+        <el-menu-item index="3-1" @click="goToPage('/data/analyze')">数据分析</el-menu-item>
+        <el-menu-item index="3-2" @click="goToPage('/data/predict')">数据预测</el-menu-item>
       </el-submenu>
-      <el-submenu index="5">
+      <el-submenu index="4">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="el-icon-upload"></i>
           <span>远程控制</span>
         </template>
 
-        <el-menu-item index="5-1" @click="goToPage('/auto/console')">手动控制台</el-menu-item>
-        <el-menu-item index="5-2" @click="goToPage('/auto/policy')">自动化策略</el-menu-item>
+        <el-menu-item index="4-1" @click="goToPage('/auto/console')">手动控制台</el-menu-item>
+        <el-menu-item index="4-2" @click="goToPage('/auto/policy')">自动化策略</el-menu-item>
       </el-submenu>
+      <el-submenu index="5" >
+        <template slot="title">
+          <i class="el-icon-phone"></i>
+          <span>监控告警</span>
+        </template>
+        <el-menu-item index="5-1" @click="goToPage('/warn/manage')">告警配置</el-menu-item>
+        <el-menu-item index="5-2" @click="goToPage('/warn/search')">告警查询</el-menu-item>
+        <el-menu-item index="5-3" @click="goToPage('/warn/handle')">我的告警</el-menu-item>
+      </el-submenu>
+
       <el-submenu index="6">
         <template>
           <span slot="title"><i class="el-icon-setting"></i>用户管理</span>
