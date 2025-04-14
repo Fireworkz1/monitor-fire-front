@@ -206,10 +206,12 @@ export default {
               @click="changeStatus(scope.row.id)">{{ scope.row.monitorOn === 1 ? '关闭监控' : '打开监控' }}</el-button>
           <el-button
               size="mini"
-              @click="view(scope.row)">查看规则组</el-button>
+              @click="view(scope.row)"
+              :disabled="scope.row.monitorOn===0">查看规则组</el-button>
           <el-button
               size="mini"
-              @click="update(scope.row)">编辑规则组</el-button>
+              @click="update(scope.row)
+              ">编辑规则组</el-button>
           <el-button
               size="mini"
               type="danger"
