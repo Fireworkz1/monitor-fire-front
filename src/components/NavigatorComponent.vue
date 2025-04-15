@@ -60,7 +60,7 @@ export default {
           <i class="el-icon-share"></i>
           <span slot="title">数据洞察</span>
         </template>
-        <el-menu-item index="3-1" @click="goToPage('/data/analyze')">数据分析</el-menu-item>
+        <el-menu-item index="3-1" @click="goToPage('/data/analyzepick')">数据分析</el-menu-item>
         <el-menu-item index="3-2" @click="goToPage('/data/predict')">数据预测</el-menu-item>
       </el-submenu>
       <el-submenu index="4">

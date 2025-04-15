@@ -3,10 +3,14 @@
 import axios from "@/axios";
 
 export default {
+  props:["dataAnalyze"],
   components: {},
   methods:{
     search() {
       this.searchData();
+    },
+    jumpToAnalyze(row){
+      this.$router.push({ name: 'DataAnalyzeView', query: { monitorId: row.id }});
     },
     update(row) {
 
@@ -82,12 +86,15 @@ export default {
     },
     async searchData() {
       try {
+
         this.monitorList = (await axios.post('/monitor/selectLike',null,{
           params: {
             str:this.searchstr
           }
         })).data;
-
+        if(this.dataAnalyze===true){
+          this.monitorList = this.monitorList.filter(item => item.monitorDemonstration === 'graph');
+        }
       } catch (error) {
         this.$message.error(error);
         this.monitorList = [];
@@ -171,12 +178,13 @@ export default {
           fixed
           prop="monitorName"
           label="监控名称"
-          width="160">
+          width="260">
       </el-table-column>
       <el-table-column
           prop="monitorType"
           label="监控类型"
-          width="80">
+          width="80"
+      >
       </el-table-column>
       <el-table-column
           label="监控对象指标/自定义监控语句"
@@ -188,14 +196,15 @@ export default {
       <el-table-column
           prop="monitorDemonstration"
           label="监控方式"
-          width="80">
+          width="80"
+          v-if="dataAnalyze!==true">
       </el-table-column>
       <el-table-column
           prop="monitorDescription"
           label="资源描述"
           width="200">
       </el-table-column>
-      <el-table-column label="操作" >
+      <el-table-column label="操作" v-if="dataAnalyze!==true" >
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -205,6 +214,15 @@ export default {
               type="danger"
               @click="local.row=scope.row;dialogVisible=true;">删除</el-button>
         </template>
+      </el-table-column>
+
+      <el-table-column label="操作" v-if="dataAnalyze===true" >
+      <template slot-scope="scope">
+        <el-button
+            size="small"
+            type="primary"
+            @click="jumpToAnalyze(scope.row)">点击进行数据分析</el-button>
+      </template>
       </el-table-column>
     </el-table>
 
