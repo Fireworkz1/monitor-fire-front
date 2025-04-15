@@ -123,20 +123,26 @@ export default {
   },
   methods: {
     async startAnalysis(){
-      console.log('开始分析');
-      this.analyzeStart=true;
-      this.analyzeFinished=false;
-      this.analyzeDataForm.monitorId=this.monitorId;
-      if(this.datePickerTime!==null&&this.datePickerTime[0]!==null){
-        this.analyzeDataForm.startTime= this.datePickerTime[0];
+      try{
+        console.log('开始分析');
+        this.analyzeStart=true;
+        this.analyzeFinished=false;
+        this.analyzeDataForm.monitorId=this.monitorId;
+        if(this.datePickerTime!==null&&this.datePickerTime[0]!==null){
+          this.analyzeDataForm.startTime= this.datePickerTime[0];
+        }
+        if(this.datePickerTime!==null&&this.datePickerTime[1]!==null){
+          this.analyzeDataForm.endTime= this.datePickerTime[1];
+        }
+        this.analyzeResponse=(await axios.post('/data/analyzeData', this.analyzeDataForm, {
+          timeout: 30000,})).data;
+        console.log(this.analyzeResponse);
+        this.analyzeFinished=true;
+      }catch (error){
+        this.$message.error(error);
+        this.analyzeStart=false;
+        this.analyzeFinished=false;
       }
-      if(this.datePickerTime!==null&&this.datePickerTime[1]!==null){
-        this.analyzeDataForm.endTime= this.datePickerTime[1];
-      }
-      this.analyzeResponse=(await axios.post('/data/analyzeData', this.analyzeDataForm, {
-        timeout: 30000,})).data;
-      console.log(this.analyzeResponse);
-      this.analyzeFinished=true;
     },
     /*总：获取数据*/
     async fetchData() {
@@ -410,20 +416,27 @@ export default {
         </template>
 
         <template>
-        <div class="container">
-          <el-button
+          <div class="container" v-if="!(analyzeStart===true&&analyzeFinished===false)">
+            <el-button
               class="analyze-button"
               type="primary"
-              style="margin-bottom: 80px"
+              style="margin-bottom: 20px;margin-top: 20px"
               @click="startAnalysis"
           >
             {{analyzeFinished===false?'根据当前显示数据开始分析！':'重新分析'}}
-          </el-button>
-        </div>
-</template>
-        <template  v-if="analyzeFinished===true">
-          <div style="margin-top: -40px;margin-bottom: 60px">
+            </el-button>
+          </div>
+        </template>
 
+        <div v-if="analyzeStart&&!analyzeFinished"
+             v-loading="analyzeStart&&!analyzeFinished"
+             element-loading-text="数据分析中，请稍安勿躁~"
+             element-loading-spinner="el-icon-loading"
+             element-loading-background="rgba(0, 0, 0, 0.8)" style="margin-top: 140px;margin-bottom: 40px"> </div>
+        <el-skeleton v-if="analyzeStart" style="margin-bottom: 100px" :rows="6" animated />
+
+
+          <div v-if="analyzeFinished" style="margin-top: 140px;margin-bottom: 160px">
             <page-label label="性能瓶颈"></page-label>
             {{analyzeResponse.performanceBottleneck}}
             <page-label label="趋势预测"></page-label>
@@ -432,7 +445,6 @@ export default {
             {{analyzeResponse.optimizationSuggestions}}
           </div>
 
-        </template>
 
       </el-main>
     </el-container>
@@ -505,6 +517,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
   transition: transform 0.3s ease; /* 添加鼠标悬停时的动画效果 */
 }
+
 
 .analyze-button:hover {
   transform: scale(1.05); /* 鼠标悬停时放大按钮 */
