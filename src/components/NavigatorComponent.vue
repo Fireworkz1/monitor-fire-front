@@ -55,14 +55,12 @@ export default {
         <el-menu-item index="2-2" @click="goToPage('/monitor/details')">监控详情</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="3">
+      <el-menu-item index="3" @click="goToPage('/data/analyzepick')">
         <template slot="title">
           <i class="el-icon-share"></i>
-          <span slot="title">数据洞察</span>
+          <span slot="title">数据分析</span>
         </template>
-        <el-menu-item index="3-1" @click="goToPage('/data/analyzepick')">数据分析</el-menu-item>
-        <el-menu-item index="3-2" @click="goToPage('/data/predict')">数据预测</el-menu-item>
-      </el-submenu>
+      </el-menu-item>
       <el-submenu index="4">
         <template slot="title">
           <i class="el-icon-upload"></i>
