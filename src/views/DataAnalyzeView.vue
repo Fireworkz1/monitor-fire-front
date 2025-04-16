@@ -452,7 +452,7 @@ export default {
 
           <div v-if="analyzeFinished" style="margin-top: 40px;margin-bottom: 160px ;text-align: left !important; font-size: 18px">
             <page-label label="性能瓶颈"></page-label>
-            <div v-html="performanceBottleneckHtml"></div>
+            <div v-html="performanceBottleneckHtml" style="margin-bottom: 40px"></div>
             <page-label label="趋势预测"></page-label>
             <div v-html="trendPredictionHtml"></div>
             <page-label label="优化建议"></page-label>
