@@ -2,9 +2,19 @@
 import PageLabel from "@/components/title/PageLabel.vue";
 import axios from "@/axios";
 import * as echarts from 'echarts';
+import { marked } from 'marked';
 
 export default {
   computed: {
+    performanceBottleneckHtml() {
+      return marked(this.analyzeResponse.performanceBottleneck);
+    },
+    trendPredictionHtml() {
+      return marked(this.analyzeResponse.trendPrediction);
+    },
+    optimizationSuggestionsHtml() {
+      return marked(this.analyzeResponse.optimizationSuggestions);
+    },
     monitorId() {
       return this.$route.query.monitorId;
     }
@@ -122,6 +132,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    displayMarkdown(markdownText, elementId) {
+      const html = marked(markdownText);
+      document.getElementById(elementId).innerHTML = html;
+    },
     async startAnalysis(){
       try{
         console.log('开始分析');
@@ -433,16 +447,16 @@ export default {
              element-loading-text="数据分析中，请稍安勿躁~"
              element-loading-spinner="el-icon-loading"
              element-loading-background="rgba(0, 0, 0, 0.8)" style="margin-top: 140px;margin-bottom: 40px"> </div>
-        <el-skeleton v-if="analyzeStart" style="margin-bottom: 100px" :rows="6" animated />
+        <el-skeleton v-if="analyzeStart&&!analyzeFinished" style="margin-bottom: 100px" :rows="6" animated />
 
 
-          <div v-if="analyzeFinished" style="margin-top: 140px;margin-bottom: 160px">
+          <div v-if="analyzeFinished" style="margin-top: 40px;margin-bottom: 160px ;text-align: left !important; font-size: 18px">
             <page-label label="性能瓶颈"></page-label>
-            {{analyzeResponse.performanceBottleneck}}
+            <div v-html="performanceBottleneckHtml"></div>
             <page-label label="趋势预测"></page-label>
-            {{analyzeResponse.trendPrediction}}
+            <div v-html="trendPredictionHtml"></div>
             <page-label label="优化建议"></page-label>
-            {{analyzeResponse.optimizationSuggestions}}
+            <div v-html="optimizationSuggestionsHtml"></div>
           </div>
 
 
@@ -521,5 +535,9 @@ export default {
 
 .analyze-button:hover {
   transform: scale(1.05); /* 鼠标悬停时放大按钮 */
+}
+
+.markdown-content {
+
 }
 </style>
