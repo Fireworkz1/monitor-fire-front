@@ -28,7 +28,7 @@ export default {
         <el-main>
           <page-label label="数据分析"></page-label>
             <monitor-table :data-analyze="true"></monitor-table>
-          <page-label label="11"></page-label>
+<!--          <page-label label="11"></page-label>-->
 
         </el-main>
       </el-container>
